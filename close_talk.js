@@ -54,7 +54,7 @@ WebSocketServer.on("connection", (socket) => {
             if (return_data.header.eventName === 'PlayerTravelled') {
                 Id_Name[return_data.body.name] = return_data.body.player.id;
                 Posi_Id[return_data.body.player.id] = return_data.body.player.position;
-                console.log("プレイヤー位置:", Posi_Id[return_data.body.player.id]);
+                console.log("プレイヤー位置:", Posi_Id);
             }
             // チャットメッセージの処理
             if (return_data.header.eventName === 'PlayerMessage') {
@@ -92,3 +92,5 @@ WebSocketServer.on("connection", (socket) => {
         console.log('接続が切断されました');
     });
 });
+
+
