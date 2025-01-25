@@ -7,10 +7,10 @@ let Posi_Id = {};
 
 // WebSocketサーバーのポート設定
 const port = 19131 || process.env.port;
-console.log(`WebSocketサーバーのポート: ${port}`);
+console.log(`WebSocketデータ: ${__dirname+port}`);
 
 // WebSocketサーバーを起動
-const WebSocketServer = new WebSocket.Server({ port }); 
+const WebSocketServer = new WebSocket.Server({ host:__dirname, port:port }); 
 
 // 接続処理
 WebSocketServer.on("connection", (socket) => {
