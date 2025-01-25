@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "main": "close_talk.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node close_talk.js"
   },
   "author": "",
   "license": "ISC",
