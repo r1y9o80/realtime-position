@@ -1,89 +1,81 @@
-const express = require('express');
+let logs = document.querySelector('.log')
+
 const WebSocket = require('ws');
-const http = require('http');
-const uuid = require('uuid'); // 一意のIDを作成するためのライブラリ
-const path = require('path');
+const uuid = require("uuid"); // 一意のIDを作成するためのライブラリ
 
-const app = express();
-const server = http.createServer(app); // Expressとhttpサーバーを統合
+let Id_Name= {};
+let Posi_Id = {}
 
-// WebSocketサーバーを作成
-const wss = new WebSocket.Server({ server });
+console.log(WebSocket);
 
-// 静的ファイルを提供するための設定
-app.use(express.static(path.join(__dirname, 'public'))); // 'public'ディレクトリに静的ファイルを格納
+// ローカルサーバーを立ち上げる
+const WebSocketServer = new WebSocket.Server({ port: process.env.PORT || 19131 }); // WebSocketサーバーをポート19131で開始
 
-// ログ表示用
-let IdData_FromName = {};
-let PosiData_FromId = {};
+console.log(`port: ${process.env.PORT || 19131}`)
 
-// WebSocketサーバー接続時の処理
-wss.on('connection', (socket) => {
+logs.textContent = process.env.PORT || 19131
+
+// マイクラとサーバーの接続を検知
+WebSocketServer.on("connection", (socket) => {
     console.log("接続されました");
-
-    // プレイヤー移動イベントの購読
     const subscribeMessage_travel = {
         header: {
             version: 1,
-            requestId: uuid.v4(),
-            messageType: "commandRequest",
-            messagePurpose: "subscribe",
+            requestId: uuid.v4(), // 一意のリクエストIDを生成
+            messageType: "commandRequest", // 不動。決まり文句
+            messagePurpose: "subscribe", // 購読する
         },
         body: {
-            eventName: "PlayerTravelled"
+            eventName: "PlayerTravelled" // 購読内容（プレイヤー移動のイベント）
         },
     };
-    socket.send(JSON.stringify(subscribeMessage_travel));
+    socket.send(JSON.stringify(subscribeMessage_travel)); // JSON形式に変換して送信
 
-    // チャットメッセージの購読
+    // チャットメッセージを購読
     const subscribeMessage_message = {
         header: {
             version: 1,
-            requestId: uuid.v4(),
-            messageType: "commandRequest",
-            messagePurpose: "subscribe",
+            requestId: uuid.v4(), // 一意のリクエストIDを生成
+            messageType: "commandRequest", // 不動。決まり文句
+            messagePurpose: "subscribe", // 購読する
         },
         body: {
-            eventName: "PlayerMessage"
+            eventName: "PlayerMessage" // 購読内容（チャットメッセージの受信）
         },
     };
-    socket.send(JSON.stringify(subscribeMessage_message));
+    socket.send(JSON.stringify(subscribeMessage_message)); // JSON形式に変換して送信
+    console.log("チャットメッセージ購読開始");
 
-    // メッセージ受信処理
+    // メッセージの受信処理をまとめる
     socket.on("message", async (rawData) => {
-        const return_data = JSON.parse(rawData);
-
+        const return_data = JSON.parse(rawData); // 購読されたデータを受け取る
+        //console.log("受け取ったデータ:", return_data);
+        // プレイヤー移動のデータ処理
         if (return_data.header.eventName == 'PlayerTravelled') {
-            IdData_FromName[return_data.body.name] = return_data.body.player.id;
-            PosiData_FromId[return_data.body.player.id] = return_data.body.player.position;
-            console.log("プレイヤー位置:", PosiData_FromId[return_data.body.player.id]);
+            Id_Name[return_data.body.name] = return_data.body.player.id
+            Posi_Id[return_data.body.player.id] = return_data.body.player.position;
+            console.log("プレイヤー位置:", Posi_Id[return_data.body.player.id]);
         }
-
+        // チャットメッセージのデータ処理
         if (return_data.header.eventName == 'PlayerMessage') {
             if(return_data.body.message == 'require id'){
                 const Id_Send_Cmd = {
                     header: {
                         version: 1,
-                        requestId: uuid.v4(),
-                        messageType: "commandRequest",
-                        messagePurpose: "commandRequest",
+                        requestId: uuid.v4(), // 一意のリクエストIDを生成
+                        messageType: "commandRequest", // コマンド実行
+                        messagePurpose: "commandRequest", // コマンド実行
                     },
                     body: {
-                        commandLine: `say あなたのIDは、 §c${IdData_FromName[return_data.body.sender.name]}`,
+                        commandLine: `say あなたのIDは、 §c${Id_Name[return_data.body.sender.name]}`, // APIの応答をsayコマンドで送信
                         version: 1,
                         origin: {
-                            type: "player"
+                            type: "player" // 発信元はプレイヤー
                         }
                     }
                 };
-                socket.send(JSON.stringify(Id_Send_Cmd));
+                socket.send(JSON.stringify(Id_Send_Cmd)); // データをマイクラへ送信
             }
         }
     });
-});
-
-// Heroku用のポート設定
-const port = process.env.PORT || 19131;
-server.listen(port, () => {
-    console.log(`Server is running on port ${port}`);
 });
