@@ -2,97 +2,112 @@ console.log("OK")
 const WebSocket = require('ws');
 const uuid = require("uuid"); // 一意のIDを作成するためのライブラリ
 
-let Id_Name= {};
-let Posi_Id = {}
+let Id_Name = {};
+let Posi_Id = {};
 
-console.log(WebSocket);
+// WebSocketサーバーのポート設定
+const port = process.env.PORT || 19131;
+console.log(`WebSocketサーバーのポート: ${port}`);
 
-// ローカルサーバーを立ち上げる
-const WebSocketServer = new WebSocket.Server({ port: process.env.PORT || 19131 }); // WebSocketサーバーをポート19131で開始
+// WebSocketサーバーを起動
+const WebSocketServer = new WebSocket.Server({ port }); 
 
-console.log(`port: ${process.env.PORT || 19131}`)
-
-
-
-// マイクラとサーバーの接続を検知
+// 接続処理
 WebSocketServer.on("connection", (socket) => {
     console.log("接続されました");
+
+    // プレイヤー移動イベントを購読
     const subscribeMessage_travel = {
         header: {
             version: 1,
-            requestId: uuid.v4(), // 一意のリクエストIDを生成
-            messageType: "commandRequest", // 不動。決まり文句
-            messagePurpose: "subscribe", // 購読する
+            requestId: uuid.v4(),
+            messageType: "commandRequest",
+            messagePurpose: "subscribe",
         },
         body: {
-            eventName: "PlayerTravelled" // 購読内容（プレイヤー移動のイベント）
+            eventName: "PlayerTravelled"
         },
     };
-    socket.send(JSON.stringify(subscribeMessage_travel)); // JSON形式に変換して送信
+    socket.send(JSON.stringify(subscribeMessage_travel));
 
-    // チャットメッセージを購読
+    // チャットメッセージイベントを購読
     const subscribeMessage_message = {
         header: {
             version: 1,
-            requestId: uuid.v4(), // 一意のリクエストIDを生成
-            messageType: "commandRequest", // 不動。決まり文句
-            messagePurpose: "subscribe", // 購読する
+            requestId: uuid.v4(),
+            messageType: "commandRequest",
+            messagePurpose: "subscribe",
         },
         body: {
-            eventName: "PlayerMessage" // 購読内容（チャットメッセージの受信）
+            eventName: "PlayerMessage"
         },
     };
-    socket.send(JSON.stringify(subscribeMessage_message)); // JSON形式に変換して送信
+    socket.send(JSON.stringify(subscribeMessage_message));
     console.log("チャットメッセージ購読開始");
 
-    // メッセージの受信処理をまとめる
+    // メッセージ受信処理
     socket.on("message", async (rawData) => {
-        const return_data = JSON.parse(rawData); // 購読されたデータを受け取る
-        //console.log("受け取ったデータ:", return_data);
-        // プレイヤー移動のデータ処理
-        if (return_data.header.eventName == 'PlayerTravelled') {
-            Id_Name[return_data.body.name] = return_data.body.player.id
-            Posi_Id[return_data.body.player.id] = return_data.body.player.position;
-            console.log("プレイヤー位置:", Posi_Id[return_data.body.player.id]);
-        }
-        // チャットメッセージのデータ処理
-        if (return_data.header.eventName == 'PlayerMessage') {
-            if(return_data.body.message == 'require id'){
-                const Id_Send_Cmd = {
-                    header: {
-                        version: 1,
-                        requestId: uuid.v4(), // 一意のリクエストIDを生成
-                        messageType: "commandRequest", // コマンド実行
-                        messagePurpose: "commandRequest", // コマンド実行
-                    },
-                    body: {
-                        commandLine: `say あなたのIDは、 §c${Id_Name[return_data.body.sender.name]}`, // APIの応答をsayコマンドで送信
-                        version: 1,
-                        origin: {
-                            type: "player" // 発信元はプレイヤー
-                        }
-                    }
-                };
-                socket.send(JSON.stringify(Id_Send_Cmd)); // データをマイクラへ送信
+        try {
+            const return_data = JSON.parse(rawData);
+            // プレイヤー移動イベントの処理
+            if (return_data.header.eventName === 'PlayerTravelled') {
+                Id_Name[return_data.body.name] = return_data.body.player.id;
+                Posi_Id[return_data.body.player.id] = return_data.body.player.position;
+                console.log("プレイヤー位置:", Posi_Id[return_data.body.player.id]);
             }
+            // チャットメッセージの処理
+            if (return_data.header.eventName === 'PlayerMessage') {
+                if (return_data.body.message === 'require id') {
+                    const Id_Send_Cmd = {
+                        header: {
+                            version: 1,
+                            requestId: uuid.v4(),
+                            messageType: "commandRequest",
+                            messagePurpose: "commandRequest",
+                        },
+                        body: {
+                            commandLine: `say あなたのIDは、 §c${Id_Name[return_data.body.sender.name]}`,
+                            version: 1,
+                            origin: {
+                                type: "player"
+                            }
+                        }
+                    };
+                    socket.send(JSON.stringify(Id_Send_Cmd)); // Minecraftへ送信
+                }
+            }
+        } catch (error) {
+            console.error("メッセージ処理エラー:", error);
         }
+    });
+
+    // 接続エラー処理
+    socket.on('error', (error) => {
+        console.error('WebSocketエラー:', error);
+    });
+
+    // 接続終了処理
+    socket.on('close', () => {
+        console.log('接続が切断されました');
     });
 });
 
+// Expressサーバーの設定
 const express = require("express");
-
-const app = express()
-
+const app = express();
 const http = require("http");
+const SV = http.createServer(app);
 
-const SV = http.createServer(app)
-
-const P = process.env.PORT || 8000
-
+const httpPort = process.env.HTTP_PORT || 8000;
 app.get("/", (req, res) => {
-    res.sendFile(__dirname + "/index.html")
-})
+    res.sendFile(__dirname + "/index.html");
+});
 
-SV.listen(P, () =>{
-    console.log("OK")
-})
+SV.listen(httpPort, () => {
+    console.log(`HTTPサーバーがポート ${httpPort} で起動しました`);
+});
+
+// HTTPサーバーエラーハンドリング
+SV.on('error', (error) => {
+    console.error('HTTPサーバーエラー:', error);
+});
