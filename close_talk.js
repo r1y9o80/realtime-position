@@ -11,7 +11,7 @@ app.get("/", (req, res) => {
 });
 
 server.listen(PORT, () => {
-    console.log(`HTTPサーバーがポート ${Port} で起動しました`);
+    console.log(`HTTPサーバーがポート ${PORT} で起動しました`);
 });
 
 // HTTPサーバーエラーハンドリング
