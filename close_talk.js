@@ -6,7 +6,7 @@ let Id_Name = {};
 let Posi_Id = {};
 
 // WebSocketサーバーのポート設定
-const port = 19131 || process.env.port;
+const port = process.env.port || 19131;
 console.log(`WebSocketデータ: ${__dirname+port}`);
 
 // WebSocketサーバーを起動
