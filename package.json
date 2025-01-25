@@ -3,14 +3,14 @@
   "version": "1.0.0",
   "main": "close_talk.js",
   "scripts": {
-    "start": "log.html"
+    "start": "node close_talk.js"
   },
   "author": "",
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "express": "^4.21.2",
     "uuid": "^11.0.5",
     "ws": "^8.18.0"
   }
 }
-
