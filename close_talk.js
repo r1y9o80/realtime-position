@@ -4,13 +4,13 @@ const express = require("express")
 const app = express();
 const http = require("http");
 const SV = http.createServer(app);
+const PORT = process.env.PORT || 8000;
 
-const Port = process.env.PORT || 8000;
 app.get("/", (req, res) => {
     res.sendFile(__dirname + "/index.html");
 });
 
-SV.listen(Port, () => {
+SV.listen(PORT, () => {
     console.log(`HTTPサーバーがポート ${httpPort} で起動しました`);
 });
 
