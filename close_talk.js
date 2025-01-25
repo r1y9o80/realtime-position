@@ -79,3 +79,16 @@ WebSocketServer.on("connection", (socket) => {
     });
 });
 
+const express = require("express");
+
+const app = express()
+
+const http = express("http");
+
+const SV = http.createServer(app)
+
+const P = process.env.PORT || 8000
+
+SV.listen(P, () =>{
+    console.log("OK")
+})
