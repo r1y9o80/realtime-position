@@ -89,6 +89,10 @@ const SV = http.createServer(app)
 
 const P = process.env.PORT || 8000
 
+app.get("/", (req, res) => {
+    res.sendFile(__dirname + "/index.html")
+})
+
 SV.listen(P, () =>{
     console.log("OK")
 })
