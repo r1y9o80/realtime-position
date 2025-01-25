@@ -7,11 +7,11 @@ let Posi_Id = {};
 
 // WebSocketサーバーのポート設定
 const port = process.env.PORT || 19131;
-console.log("process.env.PORT:", __dirname+":"+process.env.PORT);
+console.log("process.env.PORT:", __dirname + ":" + port);
 console.log(`WebSocketデータ: ${port}`);
 
 // WebSocketサーバーを起動
-const WebSocketServer = new WebSocket.Server({ host:"https://realtime-position-15b78e5f6699.herokuapp.com/" ,port:port });
+const WebSocketServer = new WebSocket.Server({ port: port });
 
 // 接続処理
 WebSocketServer.on("connection", (socket) => {
