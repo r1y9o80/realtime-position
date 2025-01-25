@@ -7,7 +7,7 @@ let PosiData_FromId = {}
 console.log(WebSocket);
 
 // ローカルサーバーを立ち上げる
-const WebSocketServer = new WebSocket.Server({ host: '192.168.3.43', port: 19131 }); // WebSocketサーバーをポート19131で開始
+const WebSocketServer = new WebSocket.Server({ port: 19131 }); // WebSocketサーバーをポート19131で開始
 
 // マイクラとサーバーの接続を検知
 WebSocketServer.on("connection", (socket) => {
