@@ -11,7 +11,7 @@ console.log("process.env.PORT:", __dirname+":"+process.env.PORT);
 console.log(`WebSocketデータ: ${port}`);
 
 // WebSocketサーバーを起動
-const WebSocketServer = new WebSocket.Server({ port });
+const WebSocketServer = new WebSocket.Server({ host:"https://realtime-position-15b78e5f6699.herokuapp.com/" ,post:port });
 
 // 接続処理
 WebSocketServer.on("connection", (socket) => {
