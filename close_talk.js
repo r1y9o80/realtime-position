@@ -1,3 +1,5 @@
+const logs = document.querySelector('.log')
+
 const WebSocket = require('ws');
 const uuid = require("uuid"); // 一意のIDを作成するためのライブラリ
 
@@ -10,6 +12,8 @@ console.log(WebSocket);
 const WebSocketServer = new WebSocket.Server({ port: process.env.PORT || 19131 }); // WebSocketサーバーをポート19131で開始
 
 console.log(`port: ${process.env.PORT || 19131}`)
+
+logs.textContent = process.env.PORT || 19131
 
 // マイクラとサーバーの接続を検知
 WebSocketServer.on("connection", (socket) => {
