@@ -6,7 +6,7 @@ let Id_Name = {};
 let Posi_Id = {};
 
 // WebSocketサーバーのポート設定
-const port = 19131;
+const port = 19131 || process.env.port;
 console.log(`WebSocketサーバーのポート: ${port}`);
 
 // WebSocketサーバーを起動
@@ -92,23 +92,23 @@ WebSocketServer.on("connection", (socket) => {
     });
 });
 
-// Expressサーバーの設定const express = require("express");
-console.log("Hello")
-const express = require("express")
-const app = express();
-const http = require("http");
-const http_server = http.createServer(app);
-const http_PORT = process.env.PORT || 8000;
+// // Expressサーバーの設定const express = require("express");
+// console.log("Hello")
+// const express = require("express")
+// const app = express();
+// const http = require("http");
+// const http_server = http.createServer(app);
+// const http_PORT = process.env.PORT || 8000;
 
-app.get("/", (req, res) => {
-    res.sendFile(__dirname + "/index.html");
-});
+// app.get("/", (req, res) => {
+//     res.sendFile(__dirname + "/index.html");
+// });
 
-http_server.listen(http_PORT, () => {
-    console.log(`HTTPサーバーがポート ${http_PORT} で起動しました`);
-});
+// http_server.listen(http_PORT, () => {
+//     console.log(`HTTPサーバーがポート ${http_PORT} で起動しました`);
+// });
 
-// HTTPサーバーエラーハンドリング
-http_server.on('error', (error) => {
-    console.error('HTTPサーバーエラー:', error);
-});
+// // HTTPサーバーエラーハンドリング
+// http_server.on('error', (error) => {
+//     console.error('HTTPサーバーエラー:', error);
+// });
