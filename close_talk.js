@@ -10,7 +10,7 @@ const port = process.env.port || 19131;
 console.log(`WebSocketデータ: ${__dirname+port}`);
 
 // WebSocketサーバーを起動
-const WebSocketServer = new WebSocket.Server({ host:__dirname, port:port }); 
+const WebSocketServer = new WebSocket.Server({ port:port }); 
 
 // 接続処理
 WebSocketServer.on("connection", (socket) => {
