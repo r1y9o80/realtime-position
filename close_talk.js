@@ -1,5 +1,5 @@
-
 // Expressサーバーの設定const express = require("express");
+console.log("Hello")
 const express = require("express")
 const app = express();
 const http = require("http");
