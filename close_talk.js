@@ -1,17 +1,17 @@
-console.log("OK")
+console.log("OK");
 const WebSocket = require('ws');
-const uuid = require("uuid"); // 一意のIDを作成するためのライブラリ
+const { v4: uuidv4 } = require("uuid"); // 一意のIDを作成するためのライブラリ
 
 let Id_Name = {};
 let Posi_Id = {};
 
 // WebSocketサーバーのポート設定
-const port = process.env.port || 19131;
-console.log("process.env.port:"+process.env.port)
+const port = process.env.PORT || 19131;
+console.log("process.env.PORT:", process.env.PORT);
 console.log(`WebSocketデータ: ${port}`);
 
 // WebSocketサーバーを起動
-const WebSocketServer = new WebSocket.Server({ port }); 
+const WebSocketServer = new WebSocket.Server({ port });
 
 // 接続処理
 WebSocketServer.on("connection", (socket) => {
@@ -21,7 +21,7 @@ WebSocketServer.on("connection", (socket) => {
     const subscribeMessage_travel = {
         header: {
             version: 1,
-            requestId: uuid.v4(),
+            requestId: uuidv4(),
             messageType: "commandRequest",
             messagePurpose: "subscribe",
         },
@@ -35,7 +35,7 @@ WebSocketServer.on("connection", (socket) => {
     const subscribeMessage_message = {
         header: {
             version: 1,
-            requestId: uuid.v4(),
+            requestId: uuidv4(),
             messageType: "commandRequest",
             messagePurpose: "subscribe",
         },
@@ -47,7 +47,7 @@ WebSocketServer.on("connection", (socket) => {
     console.log("チャットメッセージ購読開始");
 
     // メッセージ受信処理
-    socket.on("message", async (rawData) => {
+    socket.on("message", (rawData) => {
         try {
             const return_data = JSON.parse(rawData);
             // プレイヤー移動イベントの処理
@@ -62,7 +62,7 @@ WebSocketServer.on("connection", (socket) => {
                     const Id_Send_Cmd = {
                         header: {
                             version: 1,
-                            requestId: uuid.v4(),
+                            requestId: uuidv4(),
                             messageType: "commandRequest",
                             messagePurpose: "commandRequest",
                         },
@@ -92,24 +92,3 @@ WebSocketServer.on("connection", (socket) => {
         console.log('接続が切断されました');
     });
 });
-
-// // Expressサーバーの設定const express = require("express");
-// console.log("Hello")
-// const express = require("express")
-// const app = express();
-// const http = require("http");
-// const http_server = http.createServer(app);
-// const http_PORT = process.env.PORT || 8000;
-
-// app.get("/", (req, res) => {
-//     res.sendFile(__dirname + "/index.html");
-// });
-
-// http_server.listen(http_PORT, () => {
-//     console.log(`HTTPサーバーがポート ${http_PORT} で起動しました`);
-// });
-
-// // HTTPサーバーエラーハンドリング
-// http_server.on('error', (error) => {
-//     console.error('HTTPサーバーエラー:', error);
-// });
