@@ -1,37 +1,22 @@
+console.log("OK")
 const WebSocket = require('ws');
 const uuid = require("uuid"); // 一意のIDを作成するためのライブラリ
-const http = require('http'); // HTTPサーバー用のモジュール
 
-let Id_Name = {};
-let Posi_Id = {};
+let Id_Name= {};
+let Posi_Id = {}
 
 console.log(WebSocket);
 
-// WebSocketサーバーを立ち上げる
+// ローカルサーバーを立ち上げる
 const WebSocketServer = new WebSocket.Server({ port: process.env.PORT || 19131 }); // WebSocketサーバーをポート19131で開始
 
-console.log(`WebSocketサーバーはポート: ${process.env.PORT || 19131} で動作しています`);
+console.log(`port: ${process.env.PORT || 19131}`)
 
-// HTTPサーバーを立ち上げて、index.htmlを提供する
-const server = http.createServer((req, res) => {
-    if (req.url === '/') {
-        res.writeHead(200, { 'Content-Type': 'text/html' });
-        res.end('<!DOCTYPE html><html lang="ja"><head><meta charset="UTF-8"><title>My Minecraft Server</title></head><body><h1>Welcome to My Minecraft Server</h1><p>このページは最初に表示されます。</p></body></html>');
-    } else {
-        res.writeHead(404, { 'Content-Type': 'text/plain' });
-        res.end('Not Found');
-    }
-});
 
-// HTTPサーバーをポート8080で開始
-server.listen(process.env.PORT || 8080, () => {
-    console.log('HTTPサーバーがポート8080で動作しています');
-});
 
 // マイクラとサーバーの接続を検知
 WebSocketServer.on("connection", (socket) => {
     console.log("接続されました");
-
     const subscribeMessage_travel = {
         header: {
             version: 1,
@@ -63,14 +48,13 @@ WebSocketServer.on("connection", (socket) => {
     // メッセージの受信処理をまとめる
     socket.on("message", async (rawData) => {
         const return_data = JSON.parse(rawData); // 購読されたデータを受け取る
-
+        //console.log("受け取ったデータ:", return_data);
         // プレイヤー移動のデータ処理
         if (return_data.header.eventName == 'PlayerTravelled') {
-            Id_Name[return_data.body.name] = return_data.body.player.id;
+            Id_Name[return_data.body.name] = return_data.body.player.id
             Posi_Id[return_data.body.player.id] = return_data.body.player.position;
             console.log("プレイヤー位置:", Posi_Id[return_data.body.player.id]);
         }
-
         // チャットメッセージのデータ処理
         if (return_data.header.eventName == 'PlayerMessage') {
             if(return_data.body.message == 'require id'){
