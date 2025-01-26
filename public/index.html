@@ -24,7 +24,6 @@
 </body>
 <script>
     const tbody = document.getElementById('playerData');
-    tbody.innerHTML = '';  // 現在のテーブルの内容をクリア
     let data = {};
     const ws = new WebSocket('wss://realtime-position-15b78e5f6699.herokuapp.com');
 
@@ -36,13 +35,14 @@
             const Name = list_data[0]
             const Posi = list_data[1]
             data[Id] = [Name, `${Math.round(Posi.x)}, ${Math.round(Posi.y)}, ${Math.round(Posi.z)}`];
-            console.log(`Id: ${id} Name: ${Name},Posi: ${Posi.x}, ${Posi.y}, ${Posi.z}`)
+            console.log(`Id: ${Id} Name: ${Name},Posi: ${Posi.x}, ${Posi.y}, ${Posi.z}`)
         };
         updateTable();  // データが更新されたらテーブルを更新
     };
 
     // テーブルを更新する関数
     function updateTable() {
+        tbody.innerHTML = '';  // 現在のテーブルの内容をクリア
         // dataの内容をテーブルに反映
         Object.entries(data).forEach(([Id, list_data]) => {
             const tr = document.createElement('tr');  // 新しい行を作成
