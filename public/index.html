@@ -1,57 +1,62 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="wNameth=device-wNameth, initial-scale=1.0">
-        <title>マイクラプレイヤーデータ</title>
-        <link rel="stylesheet" href="styles.css">
-    </head>
-    <body>
-        <table>
-            <thead>
-                <tr>
-                    <td>プレイヤーID</td>
-                    <td>プレイヤー名</td>
-                    <td>ポジション</td>
-                </tr>
-            </thead>
-            <tbody id="playerData">
-                <!-- プレイヤーデータがここに動的に追加される -->
-            </tbody>
-        </table>
-    </body>
-    <script>
-        const tbody = document.getElementById('playerData');
-        tbody.innerHTML = '';  // 現在のテーブルの内容をクリア
-        let data = {};
-        const ws = new WebSocket('wss://realtime-position-15b78e5f6699.herokuapp.com');
-        
-        // サーバーからデータを受信したときの処理
-        ws.onmessage = (event) => {
-            const eventData = JSON.parse(event.data); // サーバーからのデータはJSON形式と仮定
-            for(const [Id, list_data] of Object.entries(eventData)){
-                if (Id == "header" || Id == "body") continue
-                const Name = list_data[0]
-                const Posi = list_data[1]
-                data[Id] = [Name, `${Math.round(Posi.x)}, ${Math.round(Posi.y)}, ${Math.round(Posi.z)}`];
-                console.log(`Id: ${id} Name: ${Name},Posi: ${Posi.x}, ${Posi.y}, ${Posi.z}`)
-            };
-            updateTable();  // データが更新されたらテーブルを更新
-        };
 
-        // テーブルを更新する関数
-        function updateTable() {
-            // dataの内容をテーブルに反映
-            Object.entries(data).forEach(([playerName, position]) => {
-                const tr = document.createElement('tr');  // 新しい行を作成
-                const tdName = document.createElement('td'); // プレイヤーName用のセル
-                tdName.textContent = playerName;
-                const tdPos = document.createElement('td'); // ポジション用のセル
-                tdPos.textContent = position;
-                tr.appendChild(tdName);  // 行にプレイヤーNameを追加
-                tr.appendChild(tdPos); // 行にポジションを追加
-                tbody.appendChild(tr); // 行をテーブルに追加
-            });
-        }
-    </script>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="wNameth=device-wNameth, initial-scale=1.0">
+    <title>マイクラプレイヤーデータ</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <table>
+        <thead>
+            <tr>
+                <td>プレイヤーID</td>
+                <td>プレイヤー名</td>
+                <td>ポジション</td>
+            </tr>
+        </thead>
+        <tbody id="playerData">
+            <!-- プレイヤーデータがここに動的に追加される -->
+        </tbody>
+    </table>
+</body>
+<script>
+    const tbody = document.getElementById('playerData');
+    tbody.innerHTML = '';  // 現在のテーブルの内容をクリア
+    let data = {};
+    const ws = new WebSocket('wss://realtime-position-15b78e5f6699.herokuapp.com');
+
+    // サーバーからデータを受信したときの処理
+    ws.onmessage = (event) => {
+        const eventData = JSON.parse(event.data); // サーバーからのデータはJSON形式と仮定
+        for (const [Id, list_data] of Object.entries(eventData)) {
+            if (Id == "header" || Id == "body") continue
+            const Name = list_data[0]
+            const Posi = list_data[1]
+            data[Id] = [Name, `${Math.round(Posi.x)}, ${Math.round(Posi.y)}, ${Math.round(Posi.z)}`];
+            console.log(`Id: ${id} Name: ${Name},Posi: ${Posi.x}, ${Posi.y}, ${Posi.z}`)
+        };
+        updateTable();  // データが更新されたらテーブルを更新
+    };
+
+    // テーブルを更新する関数
+    function updateTable() {
+        // dataの内容をテーブルに反映
+        Object.entries(data).forEach(([Id, list_data]) => {
+            const tr = document.createElement('tr');  // 新しい行を作成
+            const tdId = document.createElement('td'); // プレイヤーName用のセル
+            tdId.textContent = Id;
+            const tdName = document.createElement('td'); // プレイヤーName用のセル
+            tdName.textContent = list_data[0];
+            const tdPos = document.createElement('td'); // ポジション用のセル
+            tdPos.textContent = list_data[1];
+            tr.appendChild(tdName);  // 行にプレイヤーNameを追加
+            tr.appendChild(tdPos); // 行にポジションを追加
+            tbody.appendChild(tr); // 行をテーブルに追加
+        });
+    }
+</script>
+
 </html>
