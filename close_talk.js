@@ -52,7 +52,7 @@ WebSocketServer.on("connection", (socket) => {
             const return_data = JSON.parse(rawData);
             // プレイヤー移動イベントの処理
             if (return_data.header.eventName === 'PlayerTravelled') {
-                user_data[return_data.body.player.name] = { exist: true, posi: return_data.body.player.position };
+                user_data[return_data.body.player.name] = { exist: true, Posi: return_data.body.player.position };
                 console.log("プレイヤー位置:", user_data);
             }
         }
