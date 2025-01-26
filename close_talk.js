@@ -1,3 +1,14 @@
+const express = require("express");
+const WebSocket = require("ws");
+const { v4: uuidv4 } = require("uuid");
+const http = require("http");
+const path = require("path");
+
+const app = express();
+const server = http.createServer(app);
+const WebSocketServer = new WebSocket.Server({ server });
+
+const port = process.env.PORT || 19131;
 let socket_id = {};  // 各ソケットに一意なIDを管理
 let user_data = {};  // プレイヤーのデータ
 
@@ -93,3 +104,7 @@ WebSocketServer.on("connection", (socket) => {
         console.log('接続が切断されました');
     });
 });
+
+
+// サーバーを指定ポートで起動
+server.listen(port, () => console.log(`サーバーがポート${port}で起動しました`));
