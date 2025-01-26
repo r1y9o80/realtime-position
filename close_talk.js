@@ -31,6 +31,7 @@ const WebSocketServer = new WebSocket.Server({ server: sv }); // WebSocketサー
 // 接続処理
 WebSocketServer.on("connection", (socket) => {
     console.log("接続されました");
+    socket.id = Date.now().toString(36) + Math.random().toString(36).substring(2);
 
     // プレイヤー移動イベントを購読
     const subscribeMessage_travel = {
@@ -52,8 +53,7 @@ WebSocketServer.on("connection", (socket) => {
             const return_data = JSON.parse(rawData);
             // プレイヤー移動イベントの処理
             if (return_data.header.eventName === 'PlayerTravelled') {
-                socket.id = return_data.body.player.name
-                user_data[return_data.body.player.name] = { exist: true, Posi: return_data.body.player.position };
+                user_data[socket.id] = { exist: true, Name: return_data.body.player.name, Posi: return_data.body.player.position };
                 console.log("プレイヤー位置:", user_data);
             }
         }
@@ -77,7 +77,8 @@ WebSocketServer.on("connection", (socket) => {
     // 接続終了処理
     socket.on('close', () => {
         // 接続が切断されたユーザーのデータを更新
-        if(socket.id){
+        //socket.idがある＝HTMLじゃなくてマイクラとの断接
+        if(socket.id){ 
             user_data[sock_Name.id] = {exist: false}
             socket.send(JSON.stringify(user_data));
             console.log(socket.id)
