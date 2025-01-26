@@ -114,7 +114,9 @@ WebSocketServer.on("connection", (socket) => {
 
     // 接続終了処理
     socket.on('close', () => {
-        user_data[socket_id[socket]]["exist"] = false
+        if (user_data[socket_id[socket]]) { // socket_idに関連するデータが存在する場合のみ更新
+            user_data[socket_id[socket]]["exist"] = false;
+        }
         console.log('接続が切断されました');
     });
 });
