@@ -30,12 +30,13 @@
     // サーバーからデータを受信したときの処理
     ws.onmessage = (event) => {
         const eventData = JSON.parse(event.data); // サーバーからのデータはJSON形式と仮定
-        for (const [Id, exist_judge, list_data] of Object.entries(eventData)) {
+        console.log()
+        for (const [Id, user_data] of Object.entries(eventData)) {
             if (Id == "header" || Id == "body") continue
-
+            const exist_judge = user_data["exist"]
+            const Name = user_data["Name"]
+            const Posi = user_data["Posi"]
             if(exist_judge == "true"){
-                const Name = list_data[0]
-                const Posi = list_data[1]
                 data[Id] = [Name, `${Math.round(Posi.x)}, ${Math.round(Posi.y)}, ${Math.round(Posi.z)}`];
                 console.log(`Id: ${Id} Name: ${Name},Posi: ${Posi.x}, ${Posi.y}, ${Posi.z}`)
             }

@@ -70,7 +70,7 @@ WebSocketServer.on("connection", (socket) => {
             const return_data = JSON.parse(rawData);
             // プレイヤー移動イベントの処理
             if (return_data.header.eventName === 'PlayerTravelled') {
-                user_data[socket_id[socket]] = {exist:true, data: [return_data.body.player.name, return_data.body.player.position]}
+                user_data[socket_id[socket]] = {exist:true, Name: return_data.body.player.name, Posi: return_data.body.player.position}
                 console.log("プレイヤー位置:", user_data);
             }
             // チャットメッセージの処理
