@@ -30,6 +30,7 @@
 
     // サーバーからデータを受信
     ws.onmessage = (event) => {
+        console.log(event.data)
         const eventData = JSON.parse(event.data);
         for (const [Key, element] of Object.entries(eventData)) {
             const {exist, Name, Posi} = element
