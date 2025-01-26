@@ -52,6 +52,7 @@ WebSocketServer.on("connection", (socket) => {
             const return_data = JSON.parse(rawData);
             // プレイヤー移動イベントの処理
             if (return_data.header.eventName === 'PlayerTravelled') {
+                socket.name = body.player.name
                 user_data[return_data.body.player.name] = { exist: true, Posi: return_data.body.player.position };
                 console.log("プレイヤー位置:", user_data);
             }
@@ -76,7 +77,7 @@ WebSocketServer.on("connection", (socket) => {
     // 接続終了処理
     socket.on('close', () => {
         // 接続が切断されたユーザーのデータを更新
-        console.log(socket)
+        console.log(socket.name)
         console.log('接続が切断されました');
     });
 });
