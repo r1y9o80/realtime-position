@@ -111,7 +111,3 @@ WebSocketServer.on("connection", (socket) => {
     });
 });
 
-// サーバーを指定ポートで起動
-sv.listen(port, () => {
-    console.log(`サーバーがポート${port}で起動しました`);
-});
