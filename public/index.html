@@ -30,6 +30,20 @@
     ws.onopen = () => {
     console.log("WebSocket接続が確立しました")
     };
+
+
+    ws.onopen = () => {
+    console.log("WebSocket接続が確立しました");
+    };
+
+    ws.onclose = () => {
+        console.log("WebSocket接続が切断されました");
+    };
+
+    ws.onerror = (error) => {
+        console.error("WebSocketエラー:", error);
+    };
+
     // サーバーからデータを受信
     ws.onmessage = (event) => {
         try{
