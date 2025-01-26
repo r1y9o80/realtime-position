@@ -33,13 +33,13 @@ const WebSocketServer = new WebSocket.Server({ server: sv }); // WebSocketサー
 WebSocketServer.on("connection", (socket) => {
     console.log("接続されました");
 
-    socket_id[socket] = uuidv4()
+    socket_id[socket] = Date.now().toString(36) + Math.random().toString(36).substr(2, 4);
 
     // プレイヤー移動イベントを購読
     const subscribeMessage_travel = {
         header: {
             version: 1,
-            requestId: uuid(),
+            requestId: uuidv4(),
             messageType: "commandRequest",
             messagePurpose: "subscribe",
         },
