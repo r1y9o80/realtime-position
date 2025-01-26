@@ -79,7 +79,7 @@ WebSocketServer.on("connection", (socket) => {
         // 接続が切断されたユーザーのデータを更新
         //socket.idがある＝HTMLじゃなくてマイクラとの断接
         if(socket.id){ 
-            user_data[sock_Name.id] = {exist: false}
+            user_data[socket.id] = {exist: false}
             socket.send(JSON.stringify(user_data));
             console.log(socket.id)
         }
