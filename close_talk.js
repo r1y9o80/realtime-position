@@ -16,6 +16,8 @@ const app = express();
 const http = require("http");
 const sv = http.createServer(app);
 
+const path = posi_con
+
 // 静的ファイルの提供
 app.use(express.static(path.join(__dirname, 'public')));
 
