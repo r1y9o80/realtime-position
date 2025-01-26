@@ -87,6 +87,7 @@ function handleClose(socket) {
   if (userData[socketId[socket]]) {
     userData[socketId[socket]].exist = false;
   }
+  socket.send(JSON.stringify(userData));
   console.log("接続が切断されました");
 }
 
