@@ -34,7 +34,6 @@ WebSocketServer.on("connection", (socket) => {
     console.log("接続されました");
 
     socket_id[socket] = Date.now().toString(36) + Math.random().toString(36).substr(2, 4);
-    user_data[socket_id[socket]] = {}
 
     // プレイヤー移動イベントを購読
     const subscribeMessage_travel = {
@@ -71,7 +70,7 @@ WebSocketServer.on("connection", (socket) => {
             const return_data = JSON.parse(rawData);
             // プレイヤー移動イベントの処理
             if (return_data.header.eventName === 'PlayerTravelled') {
-                user_data[socket_id[socket]] = {exist:true, Name: return_data.body.player.name, Posi: return_data.body.player.position}
+                user_data[socket_id[socket]] = {exist: true, Name: return_data.body.player.name, Posi: return_data.body.player.position}
                 console.log("プレイヤー位置:", user_data);
             }
             // チャットメッセージの処理
@@ -114,8 +113,8 @@ WebSocketServer.on("connection", (socket) => {
 
     // 接続終了処理
     socket.on('close', () => {
-        if (user_data[socket_id[socket]]) { // socket_idに関連するデータが存在する場合のみ更新
-            user_data[socket_id[socket]]["exist"] = false;
+        if(user_data[socket_id[socket]]){
+            user_data[socket_id[socket]]["exist"] = false
         }
         console.log('接続が切断されました');
     });

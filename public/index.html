@@ -30,7 +30,7 @@
     // サーバーからデータを受信したときの処理
     ws.onmessage = (event) => {
         const eventData = JSON.parse(event.data); // サーバーからのデータはJSON形式と仮定
-        console.log()
+        console.log(eventData)
         for (const [Id, user_data] of Object.entries(eventData)) {
             if (Id == "header" || Id == "body") continue
             const exist_judge = user_data["exist"]
