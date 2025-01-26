@@ -28,7 +28,7 @@
             const eventData = JSON.parse(event.data); // サーバーからのデータはJSON形式と仮定
             for(const [Id, Posi] of Object.entries(eventData)){
                 if (Id == "header" || Id == "body") continue
-                data[Id] = `${Posi.x}, ${Posi.y}, ${Posi.z}`;
+                data[Id] = `${Math.sqrt(Posi.x)}, ${Math.sqrt(Posi.y)}, ${Math.sqrt(Posi.z)}`;
                 console.log(`Id: ${Id},Posi: ${Posi.x}, ${Posi.y}, ${Posi.z}`)
             };
 
