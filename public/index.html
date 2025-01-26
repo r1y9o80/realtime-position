@@ -30,11 +30,13 @@
         ws.onmessage = (event) => {
             const eventData = JSON.parse(event.data); // サーバーからのデータはJSON形式
             console.log(eventData)
-            for(const [Id, Name, Posi] of Object.entries(eventData)){
-                if (Id == "header" || Id == "body" || !Posi) continue
-                // data[Id] = [Name, `${Math.round(Posi.x)}, ${Math.round(Posi.y)}, ${Math.round(Posi.z)}`];
-                // console.log(`Id: ${Id}, Name: ${Name},Posi: ${Posi.x}, ${Posi.y}, ${Posi.z}`)
-                // updateTable(Id, Name, Posi);  // データが更新されたらテーブルを更新
+            for(const [Id, list_data] of Object.entries(eventData)){
+                if (Id == "header" || Id == "body") continue
+                const Name = list_data[0]
+                const Posi = list_data[1]
+                data[Id] = [Name, `${Math.round(Posi.x)}, ${Math.round(Posi.y)}, ${Math.round(Posi.z)}`];
+                console.log(`Id: ${Id}, Name: ${Name},Posi: ${Posi.x}, ${Posi.y}, ${Posi.z}`)
+                updateTable(Id, Name, Posi);  // データが更新されたらテーブルを更新
             };
         };
 
