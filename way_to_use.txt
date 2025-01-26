@@ -10,9 +10,10 @@
 |    |   ｜---git push
 |    |   ｜
 |----@使用例
-|    |---git add . 
-|    |---git commit -m "OK"
-|    |---git push
+
+git add . 
+git commit -m "OK"
+git push
 |       
 |    
 ＜Herokuの操作＞
