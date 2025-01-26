@@ -32,17 +32,17 @@
         const eventData = JSON.parse(event.data); // サーバーからのデータはJSON形式と仮定
         for (const [exist_judge, Id, list_data] of Object.entries(eventData)) {
             if (Id == "header" || Id == "body") continue
-            
+
             if(exist_judge == "exist"){
                 const Name = list_data[0]
                 const Posi = list_data[1]
                 data[Id] = [Name, `${Math.round(Posi.x)}, ${Math.round(Posi.y)}, ${Math.round(Posi.z)}`];
                 console.log(`Id: ${Id} Name: ${Name},Posi: ${Posi.x}, ${Posi.y}, ${Posi.z}`)
             }
-            else if (exist_judge == "del"){
-                delete data[id]
+            if (exist_judge == "del"){
+                delete data[Id]
             }
-            };
+        };
         updateTable();  // データが更新されたらテーブルを更新
     };
 

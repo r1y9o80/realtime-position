@@ -3,7 +3,7 @@ const WebSocket = require('ws');
 const { v4: uuidv4 } = require("uuid"); // 一意のIDを作成するためのライブラリ
 
 let socket_id = {}
-let user_data = {};
+let user_data = {exist: {}, del: []};
 
 // WebSocketサーバーのポート設定
 const port = process.env.PORT || 19131;
@@ -113,7 +113,7 @@ WebSocketServer.on("connection", (socket) => {
 
     // 接続終了処理
     socket.on('close', () => {
-        user_data["del"] = socket_id[socket]
+        user_data["del"].push(socket_id[socket])
         console.log('接続が切断されました');
     });
 });
