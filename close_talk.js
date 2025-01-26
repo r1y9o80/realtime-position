@@ -10,8 +10,19 @@ const port = process.env.PORT || 19131;
 console.log("process.env.PORT:", __dirname + ":" + port);
 console.log(`WebSocketデータ: ${port}`);
 
-// WebSocketサーバーを起動
-const WebSocketServer = new WebSocket.Server({ port: port });
+// Expressサーバー作成
+const express = require("express");
+const app = express();
+const http = require("http");
+const sv = http.createServer(app);
+
+// HTTPルーティング設定
+app.get("/", (req, res) => {
+    res.sendFile(__dirname + "/index.html");
+});
+
+// WebSocketサーバーをhttpサーバーに統合
+const WebSocketServer = new WebSocket.Server({ server: sv });
 
 // 接続処理
 WebSocketServer.on("connection", (socket) => {
@@ -84,9 +95,9 @@ WebSocketServer.on("connection", (socket) => {
 
     // 定期的にクライアントに Id_Posi を送信
     setInterval(() => {
-        const Node_data = JSON.stringify(Id_Posi)
+        const Node_data = JSON.stringify(Id_Posi);
         socket.send(Node_data);
-        Id_Posi = {}
+        Id_Posi = {};
     }, 3000); // 3秒ごとに送信
 
     // 接続エラー処理
@@ -100,14 +111,7 @@ WebSocketServer.on("connection", (socket) => {
     });
 });
 
-
-const express = require("express");
-const app = express();
-const http = require("http")
-const sv = http.createServer(app)
-
-app.get("/", (req, res) => {
-    res.sendFile(__dirname + "/index.html");
+// サーバーを指定ポートで起動
+sv.listen(port, () => {
+    console.log(`サーバーがポート${port}で起動しました`);
 });
-
-
