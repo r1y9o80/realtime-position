@@ -22,7 +22,7 @@ app.get("/", (req, res) => {
 });
 
 // WebSocketサーバーをhttpサーバーに統合
-const WebSocketServer = new WebSocket.Server({ server: sv });
+const WebSocketServer = new WebSocket.Server({ port: 19131 });
 
 // 接続処理
 WebSocketServer.on("connection", (socket) => {
@@ -111,3 +111,7 @@ WebSocketServer.on("connection", (socket) => {
     });
 });
 
+// サーバーを指定ポートで起動
+sv.listen(port, () => {
+    console.log(`サーバーがポート${port}で起動しました`);
+});
