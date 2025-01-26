@@ -103,6 +103,8 @@ WebSocketServer.on("connection", (socket) => {
 
 const express = require("express");
 const app = express();
+const http = require("http")
+const sv = http.createServer(app)
 
 app.get("/", (req, res) => {
     res.sendFile(__dirname + "/index.html");
