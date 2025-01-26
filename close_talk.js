@@ -17,7 +17,6 @@ const http = require("http");
 const sv = http.createServer(app);
 
 const path = require("path");
-const { console } = require('inspector');
 
 // 静的ファイルの提供
 app.use(express.static(path.join(__dirname, 'public')));
