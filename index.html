@@ -26,10 +26,11 @@
         // サーバーからデータを受信したときの処理
         ws.onmessage = (event) => {
             const eventData = JSON.parse(event.data); // サーバーからのデータはJSON形式と仮定
-            Object.entries(eventData).forEach((element) => {
-                data[element[0]] = `${element[1].x}, ${element[1].y}, ${element[1].z}`;
-                console.log(element)
-            });
+            for(const [Id, Posi] of Object.entries(eventData)){
+                if (element[0] == "header" || "body") continue
+                data[Id] = `${Posi.x}, ${Posi.y}, ${Posi.z}`;
+                console.log(`Id: ${Id},Posi: ${Posi.x}, ${Posi.y}, ${Posi.z}`)
+            };
 
             updateTable();  // データが更新されたらテーブルを更新
         };
