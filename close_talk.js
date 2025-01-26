@@ -39,7 +39,7 @@ WebSocketServer.on("connection", (socket) => {
     const subscribeMessage_travel = {
         header: {
             version: 1,
-            requestId: uuidv4(),
+            requestId: uuid(),
             messageType: "commandRequest",
             messagePurpose: "subscribe",
         },
