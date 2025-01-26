@@ -2,6 +2,7 @@ console.log("OK");
 const WebSocket = require('ws');
 const { v4: uuidv4 } = require("uuid"); // 一意のIDを作成するためのライブラリ
 
+let sock_Name = {};
 let user_data = {};
 
 // WebSocketサーバーのポート設定
@@ -16,6 +17,7 @@ const http = require("http");
 const sv = http.createServer(app);
 
 const path = require("path");
+const { console } = require('inspector');
 
 // 静的ファイルの提供
 app.use(express.static(path.join(__dirname, 'public')));
@@ -52,7 +54,7 @@ WebSocketServer.on("connection", (socket) => {
             const return_data = JSON.parse(rawData);
             // プレイヤー移動イベントの処理
             if (return_data.header.eventName === 'PlayerTravelled') {
-                socket.name = body.player.name
+                sock_Name[socket] = body.player.name
                 user_data[return_data.body.player.name] = { exist: true, Posi: return_data.body.player.position };
                 console.log("プレイヤー位置:", user_data);
             }
@@ -77,7 +79,12 @@ WebSocketServer.on("connection", (socket) => {
     // 接続終了処理
     socket.on('close', () => {
         // 接続が切断されたユーザーのデータを更新
-        console.log(socket.name)
+        if(sock_Name[socket]){
+            console.log(sock_Name[socket]["name"])
+        }
+        else{
+            console.log("存在しないよ")
+        }
         console.log('接続が切断されました');
     });
 });
