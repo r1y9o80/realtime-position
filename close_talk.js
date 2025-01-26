@@ -3,7 +3,6 @@ const WebSocket = require("ws");
 const { v4: uuidv4 } = require("uuid");
 const http = require("http");
 const path = require("path");
-const { log } = require("console");
 
 const app = express();
 const server = http.createServer(app);
@@ -21,9 +20,9 @@ app.get("/", (req, res) => res.sendFile(__dirname + "/posi_con/index.html"));
 WebSocketServer.on("connection", (socket) => {
   console.log("接続されました");
 
-  if(!socketId[socket]){
-    socketId[socket] = Date.now().toString(36) + Math.random().toString(36).substr(2, 4);
-  }
+
+socketId[socket] = Date.now().toString(36) + Math.random().toString(36).substr(2, 4);
+  
 
 
   // プレイヤー移動とメッセージイベントを購読
@@ -79,7 +78,7 @@ function handleMessage(socket, rawData) {
 // 定期的にユーザーデータを送信
 function sendUserData(socket) {
   socket.send(JSON.stringify(userData));
-  Object.keys(userData).forEach(key => delete userData[key]); // 送信後、データをクリア
+  userData = {}
 }
 
 // 接続終了処理
