@@ -31,6 +31,7 @@
             const eventData = JSON.parse(event.data); // サーバーからのデータはJSON形式と仮定
             for(const [Id, Name, Posi] of Object.entries(eventData)){
                 if (Id == "header" || Id == "body") continue
+                console.log(Posi)
                 data[Id] = [Name, `${Math.round(Posi.x)}, ${Math.round(Posi.y)}, ${Math.round(Posi.z)}`];
                 console.log(`Id: ${Id}, Name: ${Name},Posi: ${Posi.x}, ${Posi.y}, ${Posi.z}`)
                 updateTable(Id, Name, Posi);  // データが更新されたらテーブルを更新
