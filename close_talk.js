@@ -22,7 +22,7 @@ app.get("/", (req, res) => {
 });
 
 // WebSocketサーバーをhttpサーバーに統合
-const WebSocketServer = new WebSocket.Server({ port:port });
+const WebSocketServer = new WebSocket.Server({ server: sv }); // WebSocketサーバーをhttpサーバーに統合
 
 // 接続処理
 WebSocketServer.on("connection", (socket) => {
