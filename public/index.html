@@ -52,6 +52,7 @@
             tdName.textContent = list_data[0];
             const tdPos = document.createElement('td'); // ポジション用のセル
             tdPos.textContent = list_data[1];
+            tr.appendChild(tdId);  // 行にプレイヤーNameを追加
             tr.appendChild(tdName);  // 行にプレイヤーNameを追加
             tr.appendChild(tdPos); // 行にポジションを追加
             tbody.appendChild(tr); // 行をテーブルに追加
