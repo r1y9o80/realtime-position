@@ -80,7 +80,7 @@ WebSocketServer.on("connection", (socket) => {
         // 接続が切断されたユーザーのデータを更新
         if(sock_Name[socket]){
             user_data[sock_Name[socket]] = {exist: false}
-            socket.send(user_data);
+            socket.send(JSON.stringify(user_data));
             console.log(sock_Name[socket])
         }
         else{
