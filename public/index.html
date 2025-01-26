@@ -32,6 +32,7 @@
         const eventData = JSON.parse(event.data);
         for (const [Name, user_data] of Object.entries(eventData)) {
             const {exist, Posi} = user_data
+            console.log(exist)
             if (["header", "body"].includes(Name)) continue;
             console.log(exist)
             if (exist == true) {
