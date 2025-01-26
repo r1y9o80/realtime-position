@@ -2,7 +2,7 @@
 <html lang="en">
     <head>
         <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="viewport" content="wNameth=device-wNameth, initial-scale=1.0">
         <title>マイクラプレイヤーデータ</title>
         <link rel="stylesheet" href="styles.css">
     </head>
@@ -10,11 +10,11 @@
         <table>
             <thead>
                 <tr>
-                    <td>プレイヤーID</td>
+                    <td>プレイヤー名</td>
                     <td>ポジション</td>
                 </tr>
             </thead>
-            <tbody id="playerData">
+            <tbody Name="playerData">
                 <!-- プレイヤーデータがここに動的に追加される -->
             </tbody>
         </table>
@@ -26,10 +26,10 @@
         // サーバーからデータを受信したときの処理
         ws.onmessage = (event) => {
             const eventData = JSON.parse(event.data); // サーバーからのデータはJSON形式と仮定
-            for(const [Id, Posi] of Object.entries(eventData)){
-                if (Id == "header" || Id == "body") continue
-                data[Id] = `${Math.round(Posi.x)}, ${Math.round(Posi.y)}, ${Math.round(Posi.z)}`;
-                console.log(`Id: ${Id},Posi: ${Posi.x}, ${Posi.y}, ${Posi.z}`)
+            for(const [Name, Posi] of Object.entries(eventData)){
+                if (Name == "header" || Name == "body") continue
+                data[Name] = `${Math.round(Posi.x)}, ${Math.round(Posi.y)}, ${Math.round(Posi.z)}`;
+                console.log(`Name: ${Name},Posi: ${Posi.x}, ${Posi.y}, ${Posi.z}`)
             };
 
             updateTable();  // データが更新されたらテーブルを更新
@@ -37,17 +37,17 @@
 
         // テーブルを更新する関数
         function updateTable() {
-            const tbody = document.getElementById('playerData');
+            const tbody = document.getElementByName('playerData');
             tbody.innerHTML = '';  // 現在のテーブルの内容をクリア
 
             // dataの内容をテーブルに反映
-            Object.entries(data).forEach(([playerId, position]) => {
+            Object.entries(data).forEach(([playerName, position]) => {
                 const tr = document.createElement('tr');  // 新しい行を作成
-                const tdId = document.createElement('td'); // プレイヤーID用のセル
-                tdId.textContent = playerId;
+                const tdName = document.createElement('td'); // プレイヤーName用のセル
+                tdName.textContent = playerName;
                 const tdPos = document.createElement('td'); // ポジション用のセル
                 tdPos.textContent = position;
-                tr.appendChild(tdId);  // 行にプレイヤーIDを追加
+                tr.appendChild(tdName);  // 行にプレイヤーNameを追加
                 tr.appendChild(tdPos); // 行にポジションを追加
                 tbody.appendChild(tr); // 行をテーブルに追加
             });

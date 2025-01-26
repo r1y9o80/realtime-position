@@ -49,6 +49,7 @@ WebSocketServer.on("connection", (socket) => {
                 Name_Posi[return_data.body.player.name] = return_data.body.player.position;
                 // WebSocket接続とプレイヤー名を紐づける
                 socketId_Name[socket] = return_data.body.player.name;
+                console.log(socketId_Name)
                 console.log("プレイヤー位置:", Name_Posi);
             }
         } catch (error) {
