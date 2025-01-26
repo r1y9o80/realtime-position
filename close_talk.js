@@ -34,6 +34,7 @@ WebSocketServer.on("connection", (socket) => {
     console.log("接続されました");
 
     socket_id[socket] = Date.now().toString(36) + Math.random().toString(36).substr(2, 4);
+    user_data[socket_id[socket]] = {}
 
     // プレイヤー移動イベントを購読
     const subscribeMessage_travel = {
@@ -113,7 +114,7 @@ WebSocketServer.on("connection", (socket) => {
 
     // 接続終了処理
     socket.on('close', () => {
-        user_data[socket_id[socket]][exist] = false
+        user_data[socket_id[socket]]["exist"] = false
         console.log('接続が切断されました');
     });
 });
