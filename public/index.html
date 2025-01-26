@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="wNameth=device-wNameth, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>マイクラプレイヤーデータ</title>
     <link rel="stylesheet" href="styles.css">
 </head>
@@ -22,48 +22,39 @@
         </tbody>
     </table>
 </body>
+
 <script>
     const tbody = document.getElementById('playerData');
-    let data = {};
     const ws = new WebSocket('wss://realtime-position-15b78e5f6699.herokuapp.com');
+    let data = {};
 
-    // サーバーからデータを受信したときの処理
+    // サーバーからデータを受信
     ws.onmessage = (event) => {
-        const eventData = JSON.parse(event.data); // サーバーからのデータはJSON形式と仮定
-        //console.log(eventData)
+        const eventData = JSON.parse(event.data);
         for (const [Id, user_data] of Object.entries(eventData)) {
-            if (Id == "header" || Id == "body") continue
-            const exist_judge = user_data["exist"]
-            const Name = user_data["Name"]
-            const Posi = user_data["Posi"]
-            console.log(exist_judge,Name,Posi)
-            if(exist_judge == true){
+            if (["header", "body"].includes(Id)) continue;
+
+            const { exist, Name, Posi } = user_data;
+            if (exist) {
                 data[Id] = [Name, `${Math.round(Posi.x)}, ${Math.round(Posi.y)}, ${Math.round(Posi.z)}`];
-                console.log(`Id: ${Id} Name: ${Name},Posi: ${Posi.x}, ${Posi.y}, ${Posi.z}`)
+            } else {
+                delete data[Id];
             }
-            if (exist_judge == false){
-                delete data[Id]
-            }
-        };
-        updateTable();  // データが更新されたらテーブルを更新
+        }
+        updateTable();  // テーブルを更新
     };
 
     // テーブルを更新する関数
     function updateTable() {
         tbody.innerHTML = '';  // 現在のテーブルの内容をクリア
-        // dataの内容をテーブルに反映
-        Object.entries(data).forEach(([Id, list_data]) => {
-            const tr = document.createElement('tr');  // 新しい行を作成
-            const tdId = document.createElement('td'); // プレイヤーName用のセル
-            tdId.textContent = Id;
-            const tdName = document.createElement('td'); // プレイヤーName用のセル
-            tdName.textContent = list_data[0];
-            const tdPos = document.createElement('td'); // ポジション用のセル
-            tdPos.textContent = list_data[1];
-            tr.appendChild(tdId);  // 行にプレイヤーNameを追加
-            tr.appendChild(tdName);  // 行にプレイヤーNameを追加
-            tr.appendChild(tdPos); // 行にポジションを追加
-            tbody.appendChild(tr); // 行をテーブルに追加
+        Object.entries(data).forEach(([Id, [Name, Posi]]) => {
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+                <td>${Id}</td>
+                <td>${Name}</td>
+                <td>${Posi}</td>
+            `;
+            tbody.appendChild(tr);  // 行をテーブルに追加
         });
     }
 </script>
