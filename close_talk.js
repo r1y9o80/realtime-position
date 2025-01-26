@@ -3,6 +3,7 @@ const WebSocket = require("ws");
 const { v4: uuidv4 } = require("uuid");
 const http = require("http");
 const path = require("path");
+const { log } = require("console");
 
 const app = express();
 const server = http.createServer(app);
@@ -21,7 +22,6 @@ WebSocketServer.on("connection", (socket) => {
   console.log("接続されました");
 
   if(!socketId[socket]){
-    // 一意なIDを生成して割り当て
     socketId[socket] = Date.now().toString(36) + Math.random().toString(36).substr(2, 4);
   }
 
@@ -86,6 +86,7 @@ function sendUserData(socket) {
 function handleClose(socket) {
   if (userData[socketId[socket]]) {
     userData[socketId[socket]].exist = false;
+    console.log("dellllllllll")
   }
   socket.send(JSON.stringify(userData));
   console.log("接続が切断されました");

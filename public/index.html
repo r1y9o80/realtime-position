@@ -35,7 +35,7 @@
             if (["header", "body"].includes(Id)) continue;
 
             const { exist, Name, Posi } = user_data;
-            if (exist) {
+            if (exist == "true") {
                 data[Id] = [Name, `${Math.round(Posi.x)}, ${Math.round(Posi.y)}, ${Math.round(Posi.z)}`];
             } else {
                 console("delllllllllllll")
