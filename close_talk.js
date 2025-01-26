@@ -18,7 +18,7 @@ const sv = http.createServer(app);
 
 // HTTPルーティング設定
 app.get("/", (req, res) => {
-    res.sendFile(__dirname + "/index.html");
+    res.sendFile(__dirname + "/posi_con/index.html");
 });
 
 // WebSocketサーバーをhttpサーバーに統合
