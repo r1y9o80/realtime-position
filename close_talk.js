@@ -76,12 +76,7 @@ WebSocketServer.on("connection", (socket) => {
     // 接続終了処理
     socket.on('close', () => {
         // 接続が切断されたユーザーのデータを更新
-        for (const playerName in user_data) {
-            if (user_data.hasOwnProperty(playerName)) {
-                // ユーザー名が一致すればexistをfalseに
-                user_data[playerName].exist = false;
-            }
-        }
+        console.log(socket)
         console.log('接続が切断されました');
     });
 });
