@@ -37,11 +37,11 @@
             const Name = user_data["Name"]
             const Posi = user_data["Posi"]
             console.log(exist_judge,Name,Posi)
-            if(exist_judge == "true"){
+            if(exist_judge == true){
                 data[Id] = [Name, `${Math.round(Posi.x)}, ${Math.round(Posi.y)}, ${Math.round(Posi.z)}`];
                 console.log(`Id: ${Id} Name: ${Name},Posi: ${Posi.x}, ${Posi.y}, ${Posi.z}`)
             }
-            if (exist_judge == "false"){
+            if (exist_judge == false){
                 delete data[Id]
             }
         };
