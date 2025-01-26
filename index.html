@@ -21,7 +21,7 @@
     </body>
     <script>
         let data = {};
-        const ws = new WebSocket('ws://realtime-position-15b78e5f6699.herokuapp.com');
+        const ws = new WebSocket('wss://realtime-position-15b78e5f6699.herokuapp.com');
         
         // サーバーからデータを受信したときの処理
         ws.onmessage = (event) => {
