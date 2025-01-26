@@ -3,10 +3,53 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Class Change Example</title>
+        <title>マイクラプレイヤーデータ</title>
+        <link rel="stylesheet" href="styles.css">
+        <script src="./index.js" defer></script>
     </head>
     <body>
-        <h1 class="log">最初のログメッセージ</h1>
-        <script src="close_talk.js"></script>
+        <table>
+            <thead>
+                <tr>
+                    <td>プレイヤーID</td>
+                    <td>ポジション</td>
+                </tr>
+            </thead>
+            <tbody id="playerData">
+                <!-- プレイヤーデータがここに動的に追加される -->
+            </tbody>
+        </table>
     </body>
+    <script>
+        let data = {};
+        const ws = new WebSocket('ws://realtime-position-15b78e5f6699.herokuapp.com/');
+        
+        // サーバーからデータを受信したときの処理
+        ws.onmessage = (event) => {
+            const eventData = JSON.parse(event.data); // サーバーからのデータはJSON形式と仮定
+            Object.entries(eventData.Id_Posi).forEach(([playerId, position]) => {
+                data[playerId] = `${position.x}, ${position.y}, ${position.z}`;
+            });
+
+            updateTable();  // データが更新されたらテーブルを更新
+        };
+
+        // テーブルを更新する関数
+        function updateTable() {
+            const tbody = document.getElementById('playerData');
+            tbody.innerHTML = '';  // 現在のテーブルの内容をクリア
+
+            // dataの内容をテーブルに反映
+            Object.entries(data).forEach(([playerId, position]) => {
+                const tr = document.createElement('tr');  // 新しい行を作成
+                const tdId = document.createElement('td'); // プレイヤーID用のセル
+                tdId.textContent = playerId;
+                const tdPos = document.createElement('td'); // ポジション用のセル
+                tdPos.textContent = position;
+                tr.appendChild(tdId);  // 行にプレイヤーIDを追加
+                tr.appendChild(tdPos); // 行にポジションを追加
+                tbody.appendChild(tr); // 行をテーブルに追加
+            });
+        }
+    </script>
 </html>

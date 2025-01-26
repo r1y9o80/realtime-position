@@ -1,0 +1,17 @@
+body {
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    align-items: center;
+    margin: 0;
+}
+
+table {
+    border-collapse: collapse; /* tableに適用 */
+    margin-top: 80px;
+    width: clamp(18.75rem, 7.386rem + 56.82vw, 50rem);
+}
+
+table tr td {
+    border: solid 2px;
+}

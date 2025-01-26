@@ -1,0 +1,44 @@
+＜GitHubの操作＞
+|----➀リポジトリに追加するまでの流れ
+|    |----・コミットする候補に追加
+|    |   ｜---git add <ファイル名>
+|    |   ｜  
+|    |---・コミット（ローカルリポジトリに保存）
+|    |   ｜---git commit -m "コメント"  [＊コメントなしなら「-m ""」は省略]
+|    |   ｜  
+|    |---・コミットされたものをGitHubに反映（リモートリポジトリに保存） 
+|    |   ｜---git push
+|    |   ｜
+|----@使用例
+|    |---git add . 
+|    |---git commit -m "OK"
+|    |---git push
+|       
+|    
+＜Herokuの操作＞
+|----➀ログを見る
+|    |---heroku logs --tails --app <アプリ名> 
+|    |
+|----@使用例
+|    |---heroku logs --tail --app realtime-position
+|    |
+|----➁herokuアプリの Run/Sleep 切替
+|    |---・稼働
+|    |   ｜---heroku ps:scale web=1 -a <アプリ名> 
+|    |---・停止
+|    |   ｜---heroku ps:scale web=1 -a <アプリ名> 
+|    |
+|----@使用例
+|    |---heroku ps:scale web=1 -a realtime-position
+|    |---heroku ps:scale web=0 -a realtime-position
+|    |
+＜マイクラの操作＞
+|----➀サーバー接続
+|    |---/connect ws://<プロトコルを抜いたアドレス>　＊プロトコルとは、通信方法を指定するもの(thhps://など)。
+|    |　　　　　　　　　　　　　　　　　　　　          今回はhttps通信でなくws通信なので、httpsは書かない 
+|    |
+|    ＠使用例
+|    |
+|    |---/connect ws://realtime-position-15b78e5f6699.herokuapp.com/
+|    |
+|    |

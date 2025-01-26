@@ -2,8 +2,8 @@ console.log("OK");
 const WebSocket = require('ws');
 const { v4: uuidv4 } = require("uuid"); // 一意のIDを作成するためのライブラリ
 
-let Id_Name = {};
-let Posi_Id = {};
+let Name_Id = {};
+let Id_Posi = {};
 
 // WebSocketサーバーのポート設定
 const port = process.env.PORT || 19131;
@@ -52,9 +52,9 @@ WebSocketServer.on("connection", (socket) => {
             const return_data = JSON.parse(rawData);
             // プレイヤー移動イベントの処理
             if (return_data.header.eventName === 'PlayerTravelled') {
-                Id_Name[return_data.body.name] = return_data.body.player.id;
-                Posi_Id[return_data.body.player.id] = return_data.body.player.position;
-                console.log("プレイヤー位置:", Posi_Id);
+                Name_Id[return_data.body.name] = return_data.body.player.id;
+                Id_Posi[return_data.body.player.id] = return_data.body.player.position;
+                console.log("プレイヤー位置:", Id_Posi);
             }
             // チャットメッセージの処理
             if (return_data.header.eventName === 'PlayerMessage') {
@@ -67,7 +67,7 @@ WebSocketServer.on("connection", (socket) => {
                             messagePurpose: "commandRequest",
                         },
                         body: {
-                            commandLine: `say あなたのIDは、 §c${Id_Name[return_data.body.sender.name]}`,
+                            commandLine: `say あなたのIDは、 §c${Name_Id[return_data.body.sender.name]}`,
                             version: 1,
                             origin: {
                                 type: "player"
@@ -82,6 +82,12 @@ WebSocketServer.on("connection", (socket) => {
         }
     });
 
+    // 定期的にクライアントに Id_Posi を送信
+    setInterval(() => {
+        socket.send(Id_Posi);
+        Id_Posi = {}
+    }, 3000); // 3秒ごとに送信
+
     // 接続エラー処理
     socket.on('error', (error) => {
         console.error('WebSocketエラー:', error);
@@ -94,3 +100,9 @@ WebSocketServer.on("connection", (socket) => {
 });
 
 
+const express = require("express");
+const app = express();
+
+app.get("/", (req, res) => {
+    res.sendFile(__dirname + "/index.html")
+})
