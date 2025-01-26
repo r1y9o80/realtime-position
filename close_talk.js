@@ -82,6 +82,7 @@ WebSocketServer.on("connection", (socket) => {
             user_data[socket.id] = {exist: false}
             socket.send(JSON.stringify(user_data));
             console.log(socket.id)
+            console.log(socket.id.exist)
         }
         else{
             console.log("存在しないよ")
