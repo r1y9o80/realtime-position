@@ -70,7 +70,7 @@ WebSocketServer.on("connection", (socket) => {
             const return_data = JSON.parse(rawData);
             // プレイヤー移動イベントの処理
             if (return_data.header.eventName === 'PlayerTravelled') {
-                user_data[socket_id[socket]] = [return_data.body.player.name, return_data.body.player.position];
+                user_data["exist"][socket_id[socket]] = [return_data.body.player.name, return_data.body.player.position];
                 console.log("プレイヤー位置:", user_data);
             }
             // チャットメッセージの処理
@@ -113,6 +113,7 @@ WebSocketServer.on("connection", (socket) => {
 
     // 接続終了処理
     socket.on('close', () => {
+        user_data["del"] = socket_id[socket]
         console.log('接続が切断されました');
     });
 });
