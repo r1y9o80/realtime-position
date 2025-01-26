@@ -16,11 +16,6 @@ const app = express();
 const http = require("http");
 const sv = http.createServer(app);
 
-const path = require("path");
-
-// 静的ファイルの提供
-app.use(express.static(path.join(__dirname, 'public')));
-
 // HTTPルーティング設定
 app.get("/", (req, res) => {
     res.sendFile(__dirname + "/posi_con/index.html");
