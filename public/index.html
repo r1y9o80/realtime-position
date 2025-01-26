@@ -10,6 +10,7 @@
         <table>
             <thead>
                 <tr>
+                    <td>プレイヤーID</td>
                     <td>プレイヤー名</td>
                     <td>ポジション</td>
                 </tr>
@@ -20,37 +21,35 @@
         </table>
     </body>
     <script>
+        const tbody = document.getElementById('playerData');
+        tbody.innerHTML = '';  // 現在のテーブルの内容をクリア
         let data = {};
         const ws = new WebSocket('wss://realtime-position-15b78e5f6699.herokuapp.com');
         
         // サーバーからデータを受信したときの処理
         ws.onmessage = (event) => {
             const eventData = JSON.parse(event.data); // サーバーからのデータはJSON形式と仮定
-            for(const [Name, Posi] of Object.entries(eventData)){
-                if (Name == "header" || Name == "body") continue
-                data[Name] = `${Math.round(Posi.x)}, ${Math.round(Posi.y)}, ${Math.round(Posi.z)}`;
-                console.log(`Name: ${Name},Posi: ${Posi.x}, ${Posi.y}, ${Posi.z}`)
+            for(const [Id, Name, Posi] of Object.entries(eventData)){
+                if (Id == "header" || Id == "body") continue
+                data[Id] = [Name, `${Math.round(Posi.x)}, ${Math.round(Posi.y)}, ${Math.round(Posi.z)}`];
+                console.log(`Id: ${Id}, Name: ${Name},Posi: ${Posi.x}, ${Posi.y}, ${Posi.z}`)
+                updateTable(Id, Name, Posi);  // データが更新されたらテーブルを更新
             };
-
-            updateTable();  // データが更新されたらテーブルを更新
         };
 
         // テーブルを更新する関数
-        function updateTable() {
-            const tbody = document.getElementById('playerData');
-            tbody.innerHTML = '';  // 現在のテーブルの内容をクリア
-
-            // dataの内容をテーブルに反映
-            Object.entries(data).forEach(([playerName, position]) => {
+        function updateTable(Id, Name, Posi) {
                 const tr = document.createElement('tr');  // 新しい行を作成
+                const tdId = document.createElement('td'); // プレイヤーName用のセル
+                tdId.textContent = Id;
                 const tdName = document.createElement('td'); // プレイヤーName用のセル
-                tdName.textContent = playerName;
-                const tdPos = document.createElement('td'); // ポジション用のセル
-                tdPos.textContent = position;
+                tdName.textContent = Name;
+                const tdPosi = document.createElement('td'); // ポジション用のセル
+                tdPos.textContent = Posi;
+                tr.appendChild(tdId);  
                 tr.appendChild(tdName);  // 行にプレイヤーNameを追加
-                tr.appendChild(tdPos); // 行にポジションを追加
+                tr.appendChild(tdPosi); // 行にポジションを追加
                 tbody.appendChild(tr); // 行をテーブルに追加
-            });
-        }
+                }
     </script>
 </html>
