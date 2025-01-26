@@ -28,31 +28,30 @@
         
         // サーバーからデータを受信したときの処理
         ws.onmessage = (event) => {
-            const eventData = JSON.parse(event.data); // サーバーからのデータはJSON形式
-            console.log(eventData)
+            const eventData = JSON.parse(event.data); // サーバーからのデータはJSON形式と仮定
             for(const [Id, list_data] of Object.entries(eventData)){
                 if (Id == "header" || Id == "body") continue
                 const Name = list_data[0]
                 const Posi = list_data[1]
                 data[Id] = [Name, `${Math.round(Posi.x)}, ${Math.round(Posi.y)}, ${Math.round(Posi.z)}`];
-                console.log(`Id: ${Id}, Name: ${Name},Posi: ${Posi.x}, ${Posi.y}, ${Posi.z}`)
-                updateTable(Id, Name, Posi);  // データが更新されたらテーブルを更新
+                console.log(`Id: ${id} Name: ${Name},Posi: ${Posi.x}, ${Posi.y}, ${Posi.z}`)
             };
+            updateTable();  // データが更新されたらテーブルを更新
         };
 
         // テーブルを更新する関数
-        function updateTable(Id, Name, Posi) {
+        function updateTable() {
+            // dataの内容をテーブルに反映
+            Object.entries(data).forEach(([playerName, position]) => {
                 const tr = document.createElement('tr');  // 新しい行を作成
-                const tdId = document.createElement('td'); // プレイヤーName用のセル
-                tdId.textContent = Id;
                 const tdName = document.createElement('td'); // プレイヤーName用のセル
-                tdName.textContent = Name;
-                const tdPosi = document.createElement('td'); // ポジション用のセル
-                tdPosi.textContent = Posi;
-                tr.appendChild(tdId);  
+                tdName.textContent = playerName;
+                const tdPos = document.createElement('td'); // ポジション用のセル
+                tdPos.textContent = position;
                 tr.appendChild(tdName);  // 行にプレイヤーNameを追加
-                tr.appendChild(tdPosi); // 行にポジションを追加
+                tr.appendChild(tdPos); // 行にポジションを追加
                 tbody.appendChild(tr); // 行をテーブルに追加
-                }
+            });
+        }
     </script>
 </html>
