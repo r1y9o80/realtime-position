@@ -27,7 +27,7 @@
         ws.onmessage = (event) => {
             const eventData = JSON.parse(event.data); // サーバーからのデータはJSON形式と仮定
             for(const [Id, Posi] of Object.entries(eventData)){
-                if (element[0] == "header" || "body") continue
+                if (Id == "header" || "body") continue
                 data[Id] = `${Posi.x}, ${Posi.y}, ${Posi.z}`;
                 console.log(`Id: ${Id},Posi: ${Posi.x}, ${Posi.y}, ${Posi.z}`)
             };
