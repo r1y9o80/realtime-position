@@ -21,7 +21,7 @@ WebSocketServer.on("connection", (socket) => {
   console.log("接続されました");
 
 
-socketId[socket] = Date.now().toString(36) + Math.random().toString(36).substr(2, 4);
+  socketId[socket] = Date.now().toString(36) + Math.random().toString(36).substr(2, 4);
   
 
 
