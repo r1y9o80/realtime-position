@@ -63,9 +63,9 @@ WebSocketServer.on("connection", (socket) => {
     });
 
     // 一定期間、ポジションを集計し送信する
-    setInterval(async () => {
+    setInterval(() => {
         const Node_data = JSON.stringify(user_data);
-        await socket.send(Node_data);
+        socket.send(Node_data);
         user_data = {};
         console.log("送りました")
     }, 3000); // 3秒ごとに送信
