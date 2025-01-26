@@ -3,7 +3,7 @@ const WebSocket = require('ws');
 const { v4: uuidv4 } = require("uuid"); // 一意のIDを作成するためのライブラリ
 
 let socket_id = {}
-let user_data = {exist: {}, del: []};
+let user_data = {};
 
 // WebSocketサーバーのポート設定
 const port = process.env.PORT || 19131;
@@ -70,7 +70,7 @@ WebSocketServer.on("connection", (socket) => {
             const return_data = JSON.parse(rawData);
             // プレイヤー移動イベントの処理
             if (return_data.header.eventName === 'PlayerTravelled') {
-                user_data["exist"][socket_id[socket]] = [return_data.body.player.name, return_data.body.player.position];
+                user_data[socket_id[socket]] = {exist:true, data: [return_data.body.player.name, return_data.body.player.position]}
                 console.log("プレイヤー位置:", user_data);
             }
             // チャットメッセージの処理
@@ -113,7 +113,7 @@ WebSocketServer.on("connection", (socket) => {
 
     // 接続終了処理
     socket.on('close', () => {
-        user_data["del"].push(socket_id[socket])
+        user_data[socket_id[socket]][exist] = false
         console.log('接続が切断されました');
     });
 });
