@@ -12,7 +12,6 @@
     <table>
         <thead>
             <tr>
-                <td>プレイヤーID</td>
                 <td>プレイヤー名</td>
                 <td>ポジション</td>
             </tr>
@@ -31,16 +30,15 @@
     // サーバーからデータを受信
     ws.onmessage = (event) => {
         const eventData = JSON.parse(event.data);
-        for (const [Id, user_data] of Object.entries(eventData)) {
-            if (["header", "body"].includes(Id)) continue;
-
-            const { exist, Name, Posi } = user_data;
+        for (const [Name, user_data] of Object.entries(eventData)) {
+            const {exist, Posi} = user_data
+            if (["header", "body"].includes(Name)) continue;
             console.log(exist)
             if (exist == true) {
-                data[Id] = [Name, `${Math.round(Posi.x)}, ${Math.round(Posi.y)}, ${Math.round(Posi.z)}`];
+                data[Name] = [`${Math.round(Posi.x)}, ${Math.round(Posi.y)}, ${Math.round(Posi.z)}`];
             } else {
                 console.log("delllllllllllll")
-                delete data[Id];
+                delete data[Name];
             }
         }
         updateTable();  // テーブルを更新
@@ -49,10 +47,9 @@
     // テーブルを更新する関数
     function updateTable() {
         tbody.innerHTML = '';  // 現在のテーブルの内容をクリア
-        Object.entries(data).forEach(([Id, [Name, Posi]]) => {
+        Object.entries(data).forEach(([Name, Posi]) => {
             const tr = document.createElement('tr');
             tr.innerHTML = `
-                <td>${Id}</td>
                 <td>${Name}</td>
                 <td>${Posi}</td>
             `;

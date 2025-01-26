@@ -2,7 +2,6 @@ console.log("OK");
 const WebSocket = require('ws');
 const { v4: uuidv4 } = require("uuid"); // 一意のIDを作成するためのライブラリ
 
-let socket_id = {}
 let user_data = {};
 
 // WebSocketサーバーのポート設定
@@ -33,8 +32,6 @@ const WebSocketServer = new WebSocket.Server({ server: sv }); // WebSocketサー
 WebSocketServer.on("connection", (socket) => {
     console.log("接続されました");
 
-    socket_id[socket] = Date.now().toString(36) + Math.random().toString(36).substr(2, 4);
-
     // プレイヤー移動イベントを購読
     const subscribeMessage_travel = {
         header: {
@@ -49,53 +46,18 @@ WebSocketServer.on("connection", (socket) => {
     };
     socket.send(JSON.stringify(subscribeMessage_travel));
 
-    // チャットメッセージイベントを購読
-    const subscribeMessage_message = {
-        header: {
-            version: 1,
-            requestId: uuidv4(),
-            messageType: "commandRequest",
-            messagePurpose: "subscribe",
-        },
-        body: {
-            eventName: "PlayerMessage"
-        },
-    };
-    socket.send(JSON.stringify(subscribeMessage_message));
-    console.log("チャットメッセージ購読開始");
-
     // メッセージ受信処理
     socket.on("message", (rawData) => {
         try {
             const return_data = JSON.parse(rawData);
             // プレイヤー移動イベントの処理
             if (return_data.header.eventName === 'PlayerTravelled') {
-                user_data[socket_id[socket]] = {exist: true, Name: return_data.body.player.name, Posi: return_data.body.player.position}
+                user_data[return_data.body.player.name] = { exist: true, posi: return_data.body.player.position };
                 console.log("プレイヤー位置:", user_data);
             }
-            // チャットメッセージの処理
-            if (return_data.header.eventName === 'PlayerMessage') {
-                if (return_data.body.message === 'require id') {
-                    const Id_Send_Cmd = {
-                        header: {
-                            version: 1,
-                            requestId: uuidv4(),
-                            messageType: "commandRequest",
-                            messagePurpose: "commandRequest",
-                        },
-                        body: {
-                            commandLine: `say あなたのIDは、 §c${socket_id[socket]}`,
-                            version: 1,
-                            origin: {
-                                type: "player"
-                            }
-                        }
-                    };
-                    socket.send(JSON.stringify(Id_Send_Cmd)); // Minecraftへ送信
-                }
-            }
-        } catch (error) {
-            console.error("メッセージ処理エラー:", error);
+        }
+        catch (error) {
+            console.log("エラー: " + error)
         }
     });
 
@@ -113,8 +75,12 @@ WebSocketServer.on("connection", (socket) => {
 
     // 接続終了処理
     socket.on('close', () => {
-        if(user_data[socket_id[socket]]){
-            user_data[socket_id[socket]]["exist"] = false
+        // 接続が切断されたユーザーのデータを更新
+        for (const playerName in user_data) {
+            if (user_data.hasOwnProperty(playerName)) {
+                // ユーザー名が一致すればexistをfalseに
+                user_data[playerName].exist = false;
+            }
         }
         console.log('接続が切断されました');
     });
