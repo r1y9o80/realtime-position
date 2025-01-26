@@ -84,7 +84,8 @@ WebSocketServer.on("connection", (socket) => {
 
     // 定期的にクライアントに Id_Posi を送信
     setInterval(() => {
-        socket.send(Id_Posi);
+        const Node_data = JSON.stringify(Id_Posi)
+        socket.send(JSON.stringify(Node_data));
         Id_Posi = {}
     }, 3000); // 3秒ごとに送信
 
