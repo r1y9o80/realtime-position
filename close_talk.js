@@ -2,7 +2,6 @@ console.log("OK");
 const WebSocket = require('ws');
 const { v4: uuidv4 } = require("uuid"); // 一意のIDを作成するためのライブラリ
 
-let sock_Name = {};
 let user_data = {};
 
 // WebSocketサーバーのポート設定
@@ -78,10 +77,10 @@ WebSocketServer.on("connection", (socket) => {
     // 接続終了処理
     socket.on('close', () => {
         // 接続が切断されたユーザーのデータを更新
-        if(sock_Name[socket]){
+        if(socket.id){
             user_data[sock_Name.id] = {exist: false}
             socket.send(JSON.stringify(user_data));
-            console.log(sock_Name[socket])
+            console.log(socket.id)
         }
         else{
             console.log("存在しないよ")
