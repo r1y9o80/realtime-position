@@ -78,7 +78,8 @@ WebSocketServer.on("connection", (socket) => {
     // 接続終了処理
     socket.on('close', () => {
         // 接続が切断されたユーザーのデータを更新
-        if(sock_Name[socket]){
+        if(sock_Name[socket] && user_data[sock_Name[socket]]){
+            user_data[sock_Name[socket]["exist"]] = false
             console.log(sock_Name[socket])
         }
         else{
