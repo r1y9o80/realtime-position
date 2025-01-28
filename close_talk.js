@@ -109,7 +109,9 @@ WebSocketServer.on("connection", (socket) => {
             console.log("送りました")
             if(Object.keys(user_data).length <= 0) data_No_empty = false
         }
-        else if(Object.keys(user_data).length > 0) data_No_empty = true
+        else{
+            if(Object.keys(user_data).length > 0) data_No_empty = true
+        }
     }, 1000); // 3秒ごとに送信
 
     // 接続エラー処理
