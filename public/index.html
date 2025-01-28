@@ -45,15 +45,15 @@
         
         // エラーが発生した場所と内容をより詳細に出力
         if (error instanceof SyntaxError) {
-            console.error("JSONパースエラー:", error.message);
+            console.log("JSONパースエラー:", error.message);
         } else if (error instanceof TypeError) {
-            console.error("型エラー:", error.message);
+            console.log("型エラー:", error.message);
         } else {
-            console.error("その他のエラー:", error);
+            console.log("その他のエラー:", error);
         }
         
         // エラーのスタックトレース（どこで発生したかの詳細）
-        console.error("エラースタック:", error.stack);
+        console.log("エラースタック:", error.stack);
     }
 
     };
