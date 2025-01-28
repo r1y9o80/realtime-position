@@ -102,17 +102,21 @@ WebSocketServer.on("connection", (socket) => {
     // 一定期間、ポジションを集計し送信する
     
     setInterval(() => {
-        //data_No_emptyについて、trueからtrueやfalseからfalseにする必要はないのでフラグが切り替わる可能性のある条件内にセット
-        //空の状態でも１度は送信したいので、フラグ切替を処理の後にセット
-        if(data_No_empty){
+        // user_data が空でない場合、データを送信する
+        if (Object.keys(user_data).length > 0) {
+            if (!data_No_empty) {  // 最初の送信時にフラグを true に変更
+                data_No_empty = true;
+            }
             socket.send(pako.gzip(JSON.stringify(user_data)));
-            console.log("送りました")
-            if(Object.keys(user_data).length <= 0) data_No_empty = false
+            console.log("送りました");
         }
-        else{
-            if(Object.keys(user_data).length > 0) data_No_empty = true
+        else if (data_No_empty) {  // user_data が空のときに空データを送信する
+            socket.send(pako.gzip(JSON.stringify({})));  // 空データ送信
+            console.log("空データを送りました");
+            data_No_empty = false;  // 空データを送信したのでフラグを false に戻す
         }
-    }, 1000); // 3秒ごとに送信
+    }, 1000); // 1秒ごとに送信
+    
 
     // 接続エラー処理
     socket.on('error', (error) => {
