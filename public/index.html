@@ -30,12 +30,17 @@
 
     ws.onmessage = async (event) => {
         console.log("データが来ました");
+        if(event.data instanceof "Blob"){
+            console.log("ブロブがたです")
+        }
         try {
             const receivedData = event.data; // Blob 型
             console.log("Blobデータを確認しました:", receivedData);
-
-            // Blob を ArrayBuffer に変換
+            // Blob を ArrayBuffer に変換(つまり、処理のためにメモリを確保し、そこに追加)
             const arrayBuffer = await receivedData.arrayBuffer();
+            //追加したデータを書き取り許可モードに
+            const uint8Array = new Uint8Array(arrayBuffer)
+            //確保したメモリ上で処理
             ungzip = pako.ungzip(uint8Array, { to: 'string' });
             console.log("解凍したデータ（gzip）:", ungzip);
             // JSONとしてパース
