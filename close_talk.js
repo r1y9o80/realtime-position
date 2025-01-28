@@ -82,7 +82,7 @@ WebSocketServer.on("connection", (socket) => {
                             messagePurpose: "commandRequest", // コマンド実行
                         },
                         body: {
-                            commandLine: `say 友＞§c${socket.id}`, // APIの応答をsayコマンドで送信
+                            commandLine: `say IDは §c${socket.id}`, // APIの応答をsayコマンドで送信
                             version: 1,
                             origin: {
                                 type: "player" // 発信元はプレイヤー
