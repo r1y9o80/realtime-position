@@ -40,22 +40,8 @@
             const data = JSON.parse(ungzip);
             updateTable(data);
         } catch (error) {
-        // エラーの詳細をログに出力
-        console.log("エラー発生:", error);
-        
-        // エラーが発生した場所と内容をより詳細に出力
-        if (error instanceof SyntaxError) {
-            console.log("JSONパースエラー:", error.message);
-        } else if (error instanceof TypeError) {
-            console.log("型エラー:", error.message);
-        } else {
-            console.log("その他のエラー:", error);
+            console.log("データ処理エラー:", error);
         }
-        
-        // エラーのスタックトレース（どこで発生したかの詳細）
-        console.log("エラースタック:", error.stack);
-    }
-
     };
 
     // テーブルを更新する関数
