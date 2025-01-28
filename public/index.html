@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>マイクラプレイヤーデータ</title>
     <link rel="stylesheet" href="styles.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pako/2.1.0/pako.min.js"></script>
 </head>
 
 <body>
@@ -26,37 +27,33 @@
 <script>
     const tbody = document.getElementById('playerData');
     const ws = new WebSocket('wss://realtime-position-15b78e5f6699.herokuapp.com');
-    let data = {};
-    
+
     // サーバーからデータを受信
-    ws.onmessage = (event) => {
-        const eventData = JSON.parse(event.data);
-        for (const [Key, element] of Object.entries(eventData)) {
-            const {exist, Name, Posi} = element
-            console.log(eventData)
-            if (["header", "body"].includes(Key)) continue;
-            console.log(exist)
-            if (exist == true) {
-                data[Key] = {Name: Name, Posi:`${Math.round(Posi.x)}, ${Math.round(Posi.y)}, ${Math.round(Posi.z)}`};
-            } else {
-                delete data[Key];
-            }
+    ws.onmessage = async (event) => {
+        try {
+            // イベントデータがgzip圧縮されている場合とそうでない場合を判定
+            const receivedData = event.data
+            // データがgzip圧縮されている場合の処理
+            if (!(receivedData instanceof ArrayBuffer)) return
+            data = JSON.parse(pako.ungzip(new Uint8Array(receivedData), { to: 'string' }));
+            updateTable(data);
+        } catch (error) {
+            console.error("データ処理エラー:", error);
         }
-        updateTable();  // テーブルを更新
     };
 
     // テーブルを更新する関数
-    function updateTable() {
-        tbody.innerHTML = '';  // 現在のテーブルの内容をクリア
+    function updateTable(data) {
+        tbody.innerHTML = ''; // 現在のテーブルの内容をクリア
         Object.entries(data).forEach(([Key, element]) => {
-            const {Name, Posi} = element
+            const { Name, Posi } = element;
             const tr = document.createElement('tr');
             tr.innerHTML = `
                 <td>${Key}</td>
                 <td>${Name}</td>
-                <td>${Posi}</td>
+                <td>${JSON.stringify(Posi)}</td>
             `;
-            tbody.appendChild(tr);  // 行をテーブルに追加
+            tbody.appendChild(tr); // 行をテーブルに追加
         });
     }
 </script>
