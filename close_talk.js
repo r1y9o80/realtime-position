@@ -99,7 +99,11 @@ WebSocketServer.on("connection", (socket) => {
     });
 
     // 一定期間、ポジションを集計し送信する
+    
     setInterval(() => {
+        //returnだと、空のデータは送られず、最後の１人はHTMLの表に残ると思うかもだが、
+        //close処理でuser_dataの要素を削除後、データ送信しており、１回は空の配列が送られるので問題ない
+        if(Object.keys(user_data).length == 0) return
         socket.send(pako.gzip(JSON.stringify(user_data)));
         console.log("送りました")
     }, 1000); // 3秒ごとに送信
@@ -114,6 +118,7 @@ WebSocketServer.on("connection", (socket) => {
         // 接続が切断されたユーザーのデータを更新
         if(socket.id){ 
             delete user_data[socket.id]
+            socket.send(pako.gzip(JSON.stringify(user_data)));
         }
         else{
             console.log("存在しないよ")
