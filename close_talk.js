@@ -33,11 +33,11 @@ const WebSocketServer = new WebSocket.Server({ server: sv }); // WebSocketサー
 WebSocketServer.on("connection", (socket) => {
     console.log("接続されました");
 
-    // プレイヤー移動イベントを購読
+    //移動をリクエストトリガーに設定
     const subscribeMessage_travel = {
         header: {
             version: 1,
-            requestId: uuidv4(),
+            requestId: uuid.v4(),
             messageType: "commandRequest",
             messagePurpose: "subscribe",
         },
@@ -45,7 +45,22 @@ WebSocketServer.on("connection", (socket) => {
             eventName: "PlayerTravelled"
         },
     };
+    //chatをリクエストトリガーに設定
+    const subscribeMessage_chat = {
+        header: {
+            version: 1,
+            requestId: uuid.v4(), // 一意のリクエストIDを生成
+            messageType: "commandRequest", // 不動。決まり文句
+            messagePurpose: "subscribe", // 購読する
+        },
+        body: {
+            eventName: "PlayerMessage" // 購読内容（チャットメッセージの受信）
+        },
+    };
+
+    //設定したものを送信
     socket.send(JSON.stringify(subscribeMessage_travel));
+    socket.send(JSON.stringify(subscribeMessage_chat));
 
     // メッセージ受信処理
     socket.on("message", (rawData) => {
@@ -56,6 +71,26 @@ WebSocketServer.on("connection", (socket) => {
                 socket.id = return_data.body.player.id
                 user_data[socket.id] = { Name: return_data.body.player.name, Posi: return_data.body.player.position };
                 console.log("プレイヤー位置:", user_data);
+            }
+            if (return_data.header.eventName === 'PlayerMessage') {
+                if(return_data.body.message == "require id"){
+                    const SendCom_Info = {
+                        header: {
+                            version: 1,
+                            requestId: uuid.v4(), // 一意のリクエストIDを生成
+                            messageType: "commandRequest", // コマンド実行
+                            messagePurpose: "commandRequest", // コマンド実行
+                        },
+                        body: {
+                            commandLine: `say 友＞§c${socket.id}`, // APIの応答をsayコマンドで送信
+                            version: 1,
+                            origin: {
+                                type: "player" // 発信元はプレイヤー
+                            }
+                        }
+                    };
+                    socket.send(JSON.stringify(SendCom_Info)); // データをマイクラへ送信
+                }
             }
         }
         catch (error) {
