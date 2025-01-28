@@ -104,7 +104,7 @@ WebSocketServer.on("connection", (socket) => {
     setInterval(() => {
         //data_No_emptyについて、trueからtrueやfalseからfalseにする必要はないのでフラグが切り替わる可能性のある条件内にセット
         //空の状態でも１度は送信したいので、フラグ切替を処理の後にセット
-        if(data_No_empty < 1){ //空じゃないとき
+        if(data_No_empty < 2){ //空じゃないとき
             if(Object.keys(user_data).length <= 0) data_No_empty += 1
             socket.send(pako.gzip(JSON.stringify(user_data)));
             console.log("送りました: "+user_data)
