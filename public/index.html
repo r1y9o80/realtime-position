@@ -36,38 +36,15 @@
 
             // Blob を ArrayBuffer に変換
             const arrayBuffer = await receivedData.arrayBuffer();
-            console.log("ArrayBufferに変換:", arrayBuffer);
-
-            // ArrayBuffer を Uint8Array に変換
-            const uint8Array = new Uint8Array(arrayBuffer);
-            
-            let ungzip;
-            try {
-                // Gzip 解凍を試みる
-                ungzip = pako.ungzip(uint8Array, { to: 'string' });
-                console.log("解凍したデータ（gzip）:", ungzip);
-            } catch (gzipError) {
-                // gzip で解凍できなければ、deflate 解凍を試みる
-                console.error("gzip解凍エラー:", gzipError);
-                ungzip = pako.inflate(uint8Array, { to: 'string' });
-                console.log("解凍したデータ（deflate）:", ungzip);
-            }
-
+            ungzip = pako.ungzip(uint8Array, { to: 'string' });
+            console.log("解凍したデータ（gzip）:", ungzip);
             // JSONとしてパース
             const data = JSON.parse(ungzip);
             updateTable(data);
 
         } catch (error) {
             console.error("データ処理エラー:", error);
-            if (error instanceof SyntaxError) {
-                console.error("JSONパースエラー:", error.message);
-            } else if (error instanceof TypeError) {
-                console.error("型エラー:", error.message);
-            } else {
-                console.error("その他のエラー:", error);
-            }
-            console.error("エラースタック:", error.stack);
-        }
+        };
     };
 
 
@@ -80,7 +57,7 @@
             tr.innerHTML = `
                 <td>${Key}</td>
                 <td>${Name}</td>
-                <td>${JSON.stringify(Posi)}</td>
+                <td>${`${Posi.x},${Posi.y},${Posi.z}`}</td>
             `;
             tbody.appendChild(tr); // 行をテーブルに追加
         });
