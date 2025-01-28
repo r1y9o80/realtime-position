@@ -104,14 +104,14 @@ WebSocketServer.on("connection", (socket) => {
     setInterval(() => {
         //data_No_emptyについて、trueからtrueやfalseからfalseにする必要はないのでフラグが切り替わる可能性のある条件内にセット
         //空の状態でも１度は送信したいので、フラグ切替を処理の後にセット
-        if(data_No_empty < 2){ //空じゃないとき
-            if(Object.keys(user_data).length <= 0) data_No_empty += 1
+        if(data_No_empty == 1){ //空じゃないとき
+            if(Object.keys(user_data).length <= 0) data_No_empty += 1 //空だったら1足す
             socket.send(pako.gzip(JSON.stringify(user_data)));
             console.log("送りました: "+user_data)
             console.log(data_No_empty)
         }
         else{ //空の時
-            if(Object.keys(user_data).length > 0) data_No_empty = 0
+            if(Object.keys(user_data).length > 0) data_No_empty = 0 //空じゃなかったらリセット
             console.log(data_No_empty)
         }
     }, 1000); // 1秒ごとに送信
