@@ -3,6 +3,7 @@ const WebSocket = require('ws');
 const { v4: uuidv4 } = require("uuid"); // 一意のIDを作成するためのライブラリ
 
 let user_data = {};
+let data_No_empty = false
 
 // WebSocketサーバーのポート設定
 const port = process.env.PORT || 19131;
@@ -101,11 +102,13 @@ WebSocketServer.on("connection", (socket) => {
     // 一定期間、ポジションを集計し送信する
     
     setInterval(() => {
-        //returnだと、空のデータは送られず、最後の１人はHTMLの表に残ると思うかもだが、
-        //close処理でuser_dataの要素を削除後、データ送信しており、１回は空の配列が送られるので問題ない
-        if(Object.keys(user_data).length == 0) return
-        socket.send(pako.gzip(JSON.stringify(user_data)));
-        console.log("送りました")
+        if(data_No_empty){
+            socket.send(pako.gzip(JSON.stringify(user_data)));
+            console.log("送りました")
+        }
+        //空になった後、１度送信したいので条件は処理の後
+        if(Object.keys(user_data).length > 0) data_No_empty = true
+        else data_No_empty = false
     }, 1000); // 3秒ごとに送信
 
     // 接続エラー処理
@@ -118,7 +121,6 @@ WebSocketServer.on("connection", (socket) => {
         // 接続が切断されたユーザーのデータを更新
         if(socket.id){ 
             delete user_data[socket.id]
-            socket.send(pako.gzip(JSON.stringify(user_data)));
         }
         else{
             console.log("存在しないよ")
