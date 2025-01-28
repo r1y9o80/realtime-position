@@ -28,21 +28,48 @@
     const tbody = document.getElementById('playerData');
     const ws = new WebSocket('wss://realtime-position-15b78e5f6699.herokuapp.com');
 
-    // サーバーからデータを受信
     ws.onmessage = async (event) => {
-        console.log("データが来ました")
+        console.log("データが来ました");
         try {
-            // イベントデータがgzip圧縮されている場合とそうでない場合を判定
-            const receivedData = event.data
-            console.log("圧縮データを確認しました")
-            console.log(receivedData)
-            const ungzip = pako.ungzip(receivedData, { to: 'string' })
+            const receivedData = event.data; // Blob 型
+            console.log("Blobデータを確認しました:", receivedData);
+
+            // Blob を ArrayBuffer に変換
+            const arrayBuffer = await receivedData.arrayBuffer();
+            console.log("ArrayBufferに変換:", arrayBuffer);
+
+            // ArrayBuffer を Uint8Array に変換
+            const uint8Array = new Uint8Array(arrayBuffer);
+            
+            let ungzip;
+            try {
+                // Gzip 解凍を試みる
+                ungzip = pako.ungzip(uint8Array, { to: 'string' });
+                console.log("解凍したデータ（gzip）:", ungzip);
+            } catch (gzipError) {
+                // gzip で解凍できなければ、deflate 解凍を試みる
+                console.error("gzip解凍エラー:", gzipError);
+                ungzip = pako.inflate(uint8Array, { to: 'string' });
+                console.log("解凍したデータ（deflate）:", ungzip);
+            }
+
+            // JSONとしてパース
             const data = JSON.parse(ungzip);
             updateTable(data);
+
         } catch (error) {
-            console.log("データ処理エラー:", error);
+            console.error("データ処理エラー:", error);
+            if (error instanceof SyntaxError) {
+                console.error("JSONパースエラー:", error.message);
+            } else if (error instanceof TypeError) {
+                console.error("型エラー:", error.message);
+            } else {
+                console.error("その他のエラー:", error);
+            }
+            console.error("エラースタック:", error.stack);
         }
     };
+
 
     // テーブルを更新する関数
     function updateTable(data) {
