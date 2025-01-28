@@ -62,7 +62,7 @@
             tr.innerHTML = `
                 <td>${Key}</td>
                 <td>${Name}</td>
-                <td>${`${Posi.x},${Posi.y},${Posi.z}`}</td>
+                <td>${`${Math.round(Posi.x)},${Math.round(Posi.y)},${Math.round(Posi.z)}`}</td>
             `;
             tbody.appendChild(tr); // 行をテーブルに追加
         });
