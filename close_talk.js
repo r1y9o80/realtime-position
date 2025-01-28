@@ -106,7 +106,7 @@ WebSocketServer.on("connection", (socket) => {
         if(data_No_empty){
             socket.send(pako.gzip(JSON.stringify(user_data)));
             console.log("送りました")
-            if(Object.keys(user_data).length >= 0) data_No_empty = false
+            if(Object.keys(user_data).length <= 0) data_No_empty = false
         }
         else if(Object.keys(user_data).length > 0) data_No_empty = true
     }, 1000); // 3秒ごとに送信
