@@ -37,7 +37,7 @@ WebSocketServer.on("connection", (socket) => {
     const subscribeMessage_travel = {
         header: {
             version: 1,
-            requestId: uuid.v4(),
+            requestId: uuidv4(),
             messageType: "commandRequest",
             messagePurpose: "subscribe",
         },
@@ -49,7 +49,7 @@ WebSocketServer.on("connection", (socket) => {
     const subscribeMessage_chat = {
         header: {
             version: 1,
-            requestId: uuid.v4(), // 一意のリクエストIDを生成
+            requestId: uuidv4(), // 一意のリクエストIDを生成
             messageType: "commandRequest", // 不動。決まり文句
             messagePurpose: "subscribe", // 購読する
         },
@@ -77,7 +77,7 @@ WebSocketServer.on("connection", (socket) => {
                     const SendCom_Info = {
                         header: {
                             version: 1,
-                            requestId: uuid.v4(), // 一意のリクエストIDを生成
+                            requestId: uuidv4(), // 一意のリクエストIDを生成
                             messageType: "commandRequest", // コマンド実行
                             messagePurpose: "commandRequest", // コマンド実行
                         },
