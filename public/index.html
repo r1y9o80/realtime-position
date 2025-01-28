@@ -35,6 +35,7 @@
             // イベントデータがgzip圧縮されている場合とそうでない場合を判定
             const receivedData = event.data
             console.log("圧縮データを確認しました")
+            console.log(receivedData)
             const ungzip = pako.ungzip(receivedData, { to: 'string' })
             const data = JSON.parse(ungzip);
             updateTable(data);
