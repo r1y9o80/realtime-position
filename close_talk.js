@@ -102,13 +102,13 @@ WebSocketServer.on("connection", (socket) => {
     // 一定期間、ポジションを集計し送信する
     
     setInterval(() => {
+        //data_No_emptyについて、trueからtrueやfalseからfalseにする必要はないのでフラグが切り替わる可能性のある条件内にセット
         if(data_No_empty){
             socket.send(pako.gzip(JSON.stringify(user_data)));
             console.log("送りました")
+            if(Object.keys(user_data).length >= 0) data_No_empty = false
         }
-        //空になった後、１度送信したいので条件は処理の後
-        if(Object.keys(user_data).length > 0) data_No_empty = true
-        else data_No_empty = false
+        else if(Object.keys(user_data).length > 0) data_No_empty = true
     }, 1000); // 3秒ごとに送信
 
     // 接続エラー処理
