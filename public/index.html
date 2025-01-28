@@ -30,11 +30,13 @@
 
     // サーバーからデータを受信
     ws.onmessage = async (event) => {
+        console.log("データが来ました")
         try {
             // イベントデータがgzip圧縮されている場合とそうでない場合を判定
             const receivedData = event.data
             // データがgzip圧縮されている場合の処理
             if (!(receivedData instanceof ArrayBuffer)) return
+            console.log("圧縮データを確認しました")
             data = JSON.parse(pako.ungzip(new Uint8Array(receivedData), { to: 'string' }));
             updateTable(data);
         } catch (error) {
