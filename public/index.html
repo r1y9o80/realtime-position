@@ -30,9 +30,8 @@
 
     ws.onmessage = async (event) => {
         console.log("データが来ました");
-        if(event.data instanceof Blob){
-            console.log("ブロブがたです")
-        }
+        //圧縮データ（htmlに向けた送信）か判別
+        if(!(event.data instanceof Blob)) return
         try {
             const receivedData = event.data; // Blob 型
             console.log("Blobデータを確認しました:", receivedData);

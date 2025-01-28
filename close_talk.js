@@ -67,7 +67,7 @@ WebSocketServer.on("connection", (socket) => {
     setInterval(() => {
         socket.send(pako.gzip(JSON.stringify(user_data)));
         console.log("送りました")
-    }, 3000); // 3秒ごとに送信
+    }, 1000); // 3秒ごとに送信
 
     // 接続エラー処理
     socket.on('error', (error) => {
