@@ -3,7 +3,7 @@ const WebSocket = require('ws');
 const { v4: uuidv4 } = require("uuid"); // 一意のIDを作成するためのライブラリ
 
 let user_data = {};
-let data_No_empty = false
+let data_No_empty = 0
 
 // WebSocketサーバーのポート設定
 const port = process.env.PORT || 19131;
@@ -104,17 +104,17 @@ WebSocketServer.on("connection", (socket) => {
     setInterval(() => {
         //data_No_emptyについて、trueからtrueやfalseからfalseにする必要はないのでフラグが切り替わる可能性のある条件内にセット
         //空の状態でも１度は送信したいので、フラグ切替を処理の後にセット
-        if(data_No_empty){
-            if(Object.keys(user_data).length <= 0) data_No_empty = false
+        if(data_No_empty < 3){ //空じゃないとき
+            if(Object.keys(user_data).length <= 0) data_No_empty += 1
             socket.send(pako.gzip(JSON.stringify(user_data)));
             console.log("送りました: "+user_data)
             console.log(data_No_empty)
         }
-        else{
-            if(Object.keys(user_data).length > 0) data_No_empty = true
+        else{ //空の時
+            if(Object.keys(user_data).length > 0) data_No_empty = 0
             console.log(data_No_empty)
         }
-    }, 1000); // 3秒ごとに送信
+    }, 1000); // 1秒ごとに送信
 
     // 接続エラー処理
     socket.on('error', (error) => {
