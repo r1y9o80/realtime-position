@@ -26,7 +26,7 @@
 
 <script>
     const tbody = document.getElementById('playerData');
-    const ws = new WebSocket('wss://realtime-position-15b78e5f6699.herokuapp.com');
+    const ws = new WebSocket('ws://realtime-position-15b78e5f6699.herokuapp.com');
 
     ws.onmessage = async (event) => {
         console.log("データが来ました");
