@@ -6,7 +6,10 @@ let user_data = {};
 let data_No_empty = 0
 
 // WebSocketサーバーのポート設定
-const port = process.env.PORT || 19131;
+const portEnv = process.env.PORT || "8080";
+const port = Number(portEnv.match(/\d+/)?.[0]) || 8080;
+console.log("process.env.PORT:", port);
+
 console.log("process.env.PORT:", __dirname + ":" + port);
 console.log(`WebSocketデータ: ${port}`);
 
