@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "main": "close_talk.js",
   "scripts": {
-    "start": "npm start"
+    "start": "node close_talk.js"
   },
   "author": "",
   "license": "ISC",
